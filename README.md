@@ -8,7 +8,7 @@ Zotero Prime is a full packaged repository aimed to make on-premise [Zotero](htt
 
 ## Installation
 
-*Clone the repository:
+Clone the repository:
 ```bash
 $ mkdir /Zotero && cd /Zotero
 $ git clone --recursive https://github.com/MohamedElashri/Zotero-Docker.git
@@ -54,7 +54,7 @@ $ ./bin/init.sh
 
 ### Create users 
 
-to create users, use the create script script in bin folder 
+to create users, use the create script in bin folder 
 
 ```bash
 $ ./bin/create-user.sh {UID} {username} {password}
