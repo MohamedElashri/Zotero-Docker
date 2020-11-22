@@ -1,5 +1,5 @@
 # Zotero-Docker
- Docker version of Zotero dataserver and web library combined. This work is based on the original work of Zotero prime
+ Docker version of Zotero dataserver and web library combined. This work is based on the original work of [zotero prime](https://github.com/SamuelHassine/zotero-prime)
 
  # Zotero Prime - On-premise Zotero platform
 
