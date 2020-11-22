@@ -12,7 +12,6 @@ Clone the repository:
 ```bash
 $ mkdir /Zotero && cd /Zotero
 $ git clone --recursive https://github.com/MohamedElashri/Zotero-Docker.git
-$ cd Zotero-Prime
 ```
 *Configure and run*:
 ```bash
