@@ -1,0 +1,59 @@
+{
+	"dockerfiles": {
+		"Dockerfile": [
+			{
+				"name": "ubuntu",
+				"tag": "18.04",
+				"digest": "fd25e706f3dea2a5ff705dbc3353cf37f08307798f3e360a13e9385840f73fb3"
+			}
+		]
+	},
+	"composefiles": {
+		"docker-compose.yml": [
+			{
+				"name": "ubuntu",
+				"tag": "18.04",
+				"digest": "fd25e706f3dea2a5ff705dbc3353cf37f08307798f3e360a13e9385840f73fb3",
+				"dockerfile": "Dockerfile",
+				"service": "app-zotero"
+			},
+			{
+				"name": "phpmyadmin/phpmyadmin",
+				"tag": "latest",
+				"digest": "7d98bb1eaaa15289624b36cb1b0259a4d6aed4b797a5466e95d6f2e2e3d9008e",
+				"service": "app-zotero-phpmyadmin"
+			},
+			{
+				"name": "atlassianlabs/localstack",
+				"tag": "latest",
+				"digest": "07746140a2bfb15cd6ac08c6536f9722dbca2016e69e4e456d62acad63314536",
+				"service": "db-zotero-localstack"
+			},
+			{
+				"name": "memcached",
+				"tag": "1.5",
+				"digest": "8d870b409fba125aa5fdeec28cefe9ba6a5d926d508f63a8986cbba6c05f2b69",
+				"service": "db-zotero-memcached"
+			},
+			{
+				"name": "minio/minio",
+				"tag": "latest",
+				"digest": "a73748dd30afa2c8e54029b7123ce231bc1645e0ac3045cacd02add03bd20a64",
+				"dockerfile": "minio/Dockerfile",
+				"service": "db-zotero-minio"
+			},
+			{
+				"name": "mysql",
+				"tag": "5.7",
+				"digest": "c3a567d3e3ad8b05dfce401ed08f0f6bf3f3b64cc17694979d5f2e5d78e10173",
+				"service": "db-zotero-mysql"
+			},
+			{
+				"name": "redis",
+				"tag": "5.0",
+				"digest": "6043b9d1dab9d17d178993a136805ade6c57d7be97a78efaffd7b2bb7b84b9d9",
+				"service": "db-zotero-redis"
+			}
+		]
+	}
+}
