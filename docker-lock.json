@@ -31,14 +31,14 @@
 			},
 			{
 				"name": "memcached",
-				"tag": "1.5",
-				"digest": "8d870b409fba125aa5fdeec28cefe9ba6a5d926d508f63a8986cbba6c05f2b69",
+				"tag": "1.6",
+				"digest": "944f6eb53be39dfcb895ab110d685e4f0320ffa00b8a1c0fe35aeb52f4f89d30",
 				"service": "db-zotero-memcached"
 			},
 			{
 				"name": "minio/minio",
 				"tag": "latest",
-				"digest": "a73748dd30afa2c8e54029b7123ce231bc1645e0ac3045cacd02add03bd20a64",
+				"digest": "434805a8e446a8430ac2c40302d3175aaea837edf053b3fbd4d1c90ab70954ab",
 				"dockerfile": "minio/Dockerfile",
 				"service": "db-zotero-minio"
 			},
