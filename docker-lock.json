@@ -51,7 +51,7 @@
 			{
 				"name": "redis",
 				"tag": "5.0",
-				"digest": "fe41f984f96dd0878c57eae5819ad164d5bbe65ae35f6b84c81cc372dfcc7795",
+				"digest": "49255a58c9f6611e5b9e90f14f3ff8961f0801871b76194058b4a6cd98e75c4e",
 				"service": "db-zotero-redis"
 			}
 		]
