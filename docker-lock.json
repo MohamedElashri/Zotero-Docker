@@ -32,7 +32,7 @@
 			{
 				"name": "memcached",
 				"tag": "1.6",
-				"digest": "af8fa187032cb5f93b8dca69d556bd46f41e6b4690a2028386fbb97481092fd2",
+				"digest": "1ecdb35efc586a3ba003d1ab9105cbdc3e4d88ea0008ba59be0a184df6e2418f",
 				"service": "db-zotero-memcached"
 			},
 			{
@@ -45,7 +45,7 @@
 			{
 				"name": "mysql",
 				"tag": "5.7",
-				"digest": "c3a567d3e3ad8b05dfce401ed08f0f6bf3f3b64cc17694979d5f2e5d78e10173",
+				"digest": "e08834258fcc0efd01df358222333919df53d4a0d9b2a54da05b204b822e3b7b",
 				"service": "db-zotero-mysql"
 			},
 			{
