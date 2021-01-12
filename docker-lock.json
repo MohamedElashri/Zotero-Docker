@@ -32,26 +32,26 @@
 			{
 				"name": "memcached",
 				"tag": "1.6",
-				"digest": "944f6eb53be39dfcb895ab110d685e4f0320ffa00b8a1c0fe35aeb52f4f89d30",
+				"digest": "1ecdb35efc586a3ba003d1ab9105cbdc3e4d88ea0008ba59be0a184df6e2418f",
 				"service": "db-zotero-memcached"
 			},
 			{
 				"name": "minio/minio",
 				"tag": "latest",
-				"digest": "434805a8e446a8430ac2c40302d3175aaea837edf053b3fbd4d1c90ab70954ab",
+				"digest": "714528721cac6e7fcdeb345aed760161c88834d1cf103f04a3b7dd586f0765f8",
 				"dockerfile": "minio/Dockerfile",
 				"service": "db-zotero-minio"
 			},
 			{
 				"name": "mysql",
 				"tag": "5.7",
-				"digest": "c3a567d3e3ad8b05dfce401ed08f0f6bf3f3b64cc17694979d5f2e5d78e10173",
+				"digest": "e08834258fcc0efd01df358222333919df53d4a0d9b2a54da05b204b822e3b7b",
 				"service": "db-zotero-mysql"
 			},
 			{
 				"name": "redis",
 				"tag": "5.0",
-				"digest": "6043b9d1dab9d17d178993a136805ade6c57d7be97a78efaffd7b2bb7b84b9d9",
+				"digest": "6c6d4689d2d3ce4a6b872740975132f39d6c113070ee2de53958e72abfc5bdd4",
 				"service": "db-zotero-redis"
 			}
 		]
