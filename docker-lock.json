@@ -38,20 +38,20 @@
 			{
 				"name": "minio/minio",
 				"tag": "latest",
-				"digest": "714528721cac6e7fcdeb345aed760161c88834d1cf103f04a3b7dd586f0765f8",
+				"digest": "fafd3af791a0c564b73d995ef3f8d7bde4d0caf25b32bec3a11dc71a9096479a",
 				"dockerfile": "minio/Dockerfile",
 				"service": "db-zotero-minio"
 			},
 			{
 				"name": "mysql",
 				"tag": "5.7",
-				"digest": "e08834258fcc0efd01df358222333919df53d4a0d9b2a54da05b204b822e3b7b",
+				"digest": "b3d1eff023f698cd433695c9506171f0d08a8f92a0c8063c1a4d9db9a55808df",
 				"service": "db-zotero-mysql"
 			},
 			{
 				"name": "redis",
 				"tag": "5.0",
-				"digest": "63bbcce5eabe39bb6706a2426cf6923627663443cc2798024f5a6f3aef6d004c",
+				"digest": "49255a58c9f6611e5b9e90f14f3ff8961f0801871b76194058b4a6cd98e75c4e",
 				"service": "db-zotero-redis"
 			}
 		]
