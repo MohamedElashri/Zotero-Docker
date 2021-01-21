@@ -4,7 +4,7 @@
 			{
 				"name": "ubuntu",
 				"tag": "18.04",
-				"digest": "fd25e706f3dea2a5ff705dbc3353cf37f08307798f3e360a13e9385840f73fb3"
+				"digest": "89ff3f4e9bd4ab398f4518cfb403be40b0338e641855b382dad92882599d19e0"
 			}
 		]
 	},
@@ -13,7 +13,7 @@
 			{
 				"name": "ubuntu",
 				"tag": "18.04",
-				"digest": "fd25e706f3dea2a5ff705dbc3353cf37f08307798f3e360a13e9385840f73fb3",
+				"digest": "89ff3f4e9bd4ab398f4518cfb403be40b0338e641855b382dad92882599d19e0",
 				"dockerfile": "Dockerfile",
 				"service": "app-zotero"
 			},
