@@ -4,7 +4,7 @@
 			{
 				"name": "ubuntu",
 				"tag": "18.04",
-				"digest": "fd25e706f3dea2a5ff705dbc3353cf37f08307798f3e360a13e9385840f73fb3"
+				"digest": "ea188fdc5be9b25ca048f1e882b33f1bc763fb976a8a4fea446b38ed0efcbeba"
 			}
 		]
 	},
@@ -13,14 +13,14 @@
 			{
 				"name": "ubuntu",
 				"tag": "18.04",
-				"digest": "fd25e706f3dea2a5ff705dbc3353cf37f08307798f3e360a13e9385840f73fb3",
+				"digest": "ea188fdc5be9b25ca048f1e882b33f1bc763fb976a8a4fea446b38ed0efcbeba",
 				"dockerfile": "Dockerfile",
 				"service": "app-zotero"
 			},
 			{
 				"name": "phpmyadmin/phpmyadmin",
 				"tag": "latest",
-				"digest": "7d98bb1eaaa15289624b36cb1b0259a4d6aed4b797a5466e95d6f2e2e3d9008e",
+				"digest": "6236673255ebe2a845c9ca9f5da58e53c8b1144877330f42610c258aa106a1a6",
 				"service": "app-zotero-phpmyadmin"
 			},
 			{
@@ -38,7 +38,7 @@
 			{
 				"name": "minio/minio",
 				"tag": "latest",
-				"digest": "fafd3af791a0c564b73d995ef3f8d7bde4d0caf25b32bec3a11dc71a9096479a",
+				"digest": "3b6bc59b4266094e3d98fc82286208151f34504b884c26da6782315e45b97efc",
 				"dockerfile": "minio/Dockerfile",
 				"service": "db-zotero-minio"
 			},
