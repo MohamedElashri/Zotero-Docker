@@ -20,7 +20,7 @@
 			{
 				"name": "phpmyadmin/phpmyadmin",
 				"tag": "latest",
-				"digest": "6236673255ebe2a845c9ca9f5da58e53c8b1144877330f42610c258aa106a1a6",
+				"digest": "8c181ee691e4497afc72c521354e6aacab24624d1d04b8cf819a73fa37d044c2",
 				"service": "app-zotero-phpmyadmin"
 			},
 			{
