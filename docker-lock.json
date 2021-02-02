@@ -20,7 +20,7 @@
 			{
 				"name": "phpmyadmin/phpmyadmin",
 				"tag": "latest",
-				"digest": "8c181ee691e4497afc72c521354e6aacab24624d1d04b8cf819a73fa37d044c2",
+				"digest": "8c44d382ae303416556e33fca677fca6983a3a8f9140db2696deb6aa53088434",
 				"service": "app-zotero-phpmyadmin"
 			},
 			{
@@ -38,7 +38,7 @@
 			{
 				"name": "minio/minio",
 				"tag": "latest",
-				"digest": "3b6bc59b4266094e3d98fc82286208151f34504b884c26da6782315e45b97efc",
+				"digest": "84a74cd1db07afdc0a399cc9882af4dcc1dbc39636133e818daf76b4e3da469b",
 				"dockerfile": "minio/Dockerfile",
 				"service": "db-zotero-minio"
 			},
