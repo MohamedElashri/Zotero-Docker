@@ -20,7 +20,7 @@
 			{
 				"name": "phpmyadmin/phpmyadmin",
 				"tag": "latest",
-				"digest": "8c44d382ae303416556e33fca677fca6983a3a8f9140db2696deb6aa53088434",
+				"digest": "",
 				"service": "app-zotero-phpmyadmin"
 			},
 			{
@@ -32,7 +32,7 @@
 			{
 				"name": "memcached",
 				"tag": "1.6",
-				"digest": "",
+				"digest": "1ecdb35efc586a3ba003d1ab9105cbdc3e4d88ea0008ba59be0a184df6e2418f",
 				"service": "db-zotero-memcached"
 			},
 			{
@@ -45,7 +45,7 @@
 			{
 				"name": "mysql",
 				"tag": "5.7",
-				"digest": "",
+				"digest": "b3d1eff023f698cd433695c9506171f0d08a8f92a0c8063c1a4d9db9a55808df",
 				"service": "db-zotero-mysql"
 			},
 			{
