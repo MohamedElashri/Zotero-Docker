@@ -32,7 +32,7 @@
 			{
 				"name": "memcached",
 				"tag": "1.6",
-				"digest": "15b9a27158ef79d113ad28c679c202336f9bacdf893e17b2001639975c276223",
+				"digest": "4864bee476ec386e1f2bc2f0ea421191a35beddfffac8d5dad73031f9b275c9c",
 				"service": "db-zotero-memcached"
 			},
 			{
@@ -51,7 +51,7 @@
 			{
 				"name": "redis",
 				"tag": "5.0",
-				"digest": "d1852e6f78b50993c5e59b504190a19f27fb08a8563e1106e2aa8f25cb1fd42d",
+				"digest": "a776add133c922494d1cf16ca1f1aaa21394a2d0f9b56c00946ac75c5c83b535",
 				"service": "db-zotero-redis"
 			}
 		]
