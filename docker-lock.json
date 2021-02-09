@@ -32,7 +32,7 @@
 			{
 				"name": "memcached",
 				"tag": "1.6",
-				"digest": "1ecdb35efc586a3ba003d1ab9105cbdc3e4d88ea0008ba59be0a184df6e2418f",
+				"digest": "967c10e767a559460b98156f70c67c9a3c899cb37d981e6cce2c6b0ee8fa5d33",
 				"service": "db-zotero-memcached"
 			},
 			{
