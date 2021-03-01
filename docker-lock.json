@@ -38,7 +38,7 @@
 			{
 				"name": "minio/minio",
 				"tag": "latest",
-				"digest": "3b40c9044198667fbcd5bd1b68e778c9369be72cab446ed006d07cddd13f7665",
+				"digest": "f02eb4cc81a473d6206adbd793c8dcc2c0c722c1b8111afde7c77a811bcfa66f",
 				"dockerfile": "minio/Dockerfile",
 				"service": "db-zotero-minio"
 			},
