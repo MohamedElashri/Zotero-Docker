@@ -1,5 +1,5 @@
 # Use the official Docker Hub Ubuntu 18.04 base image
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 # replace shell with bash so we can source files
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
