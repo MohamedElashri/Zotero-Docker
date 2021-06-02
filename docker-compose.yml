@@ -6,7 +6,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=zotero
   db-zotero-redis:
-     image: redis:5.0
+     image: redis:6.2
   db-zotero-memcached:
      image: memcached:1.6
   db-zotero-localstack:
