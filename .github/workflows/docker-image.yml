@@ -11,9 +11,12 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./docker
+
 
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      working-directory: ./docker
       run: docker build . --file /Dockerfile --tag zotero-docker:$(date +%s)
