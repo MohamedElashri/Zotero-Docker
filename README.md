@@ -62,4 +62,4 @@ $ ./bin/create-user.sh {UID} {username} {password}
 
 ## Client installation
 
-To do
+[Instruction](https://github.com/MohamedElashri/Zotero-Docker/blob/main/client/README.md)
