@@ -10,8 +10,8 @@ Zotero Prime is a full packaged repository aimed to make on-premise [Zotero](htt
 
 Clone the repository:
 ```bash
-$ mkdir /Zotero && cd /Zotero
 $ git clone --recursive https://github.com/MohamedElashri/Zotero-Docker.git
+$ cd /Zotero-Docker/docker
 ```
 *Configure and run*:
 ```bash
