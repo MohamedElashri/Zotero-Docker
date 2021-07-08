@@ -5,7 +5,7 @@ services:
 script:
   - cd web
   - docker build --tag zotero-web .
-  - docker run zotero-web
 
 after_script:
   - docker images
+  
