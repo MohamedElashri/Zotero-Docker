@@ -13,10 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Setup working directory
-      working-directory: ./docker
-
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file /docker/Dockerfile --tag zotero-docker:$(date +%s)
+      working-directory: ./docker
+      run: docker build . --file /Dockerfile --tag zotero-docker:$(date +%s)
