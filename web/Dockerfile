@@ -18,6 +18,6 @@ RUN git clone https://github.com/zotero/web-library && \
 
 RUN cd /zotero/web-library && npm run build
 
-EXPOSE 8004/TCP
+EXPOSE 8084/TCP
 VOLUME /zotero/config
 ENTRYPOINT ["/zotero/entrypoint.sh"]
