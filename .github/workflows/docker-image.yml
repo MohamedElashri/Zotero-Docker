@@ -17,4 +17,4 @@ jobs:
     - name: Move to web library development dir
       run: cd web
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag zotero-web:$(date +%s)
+      run: docker build . --file Dockerfile --tag zotero-docker:$(date +%s)
