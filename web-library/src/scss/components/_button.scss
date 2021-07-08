@@ -1,0 +1,345 @@
+//
+// Buttons
+// --------------------------------------------------
+
+.btn {
+	padding: $input-btn-padding-y $input-btn-padding-x;
+	cursor: pointer;
+	border: $border-width solid transparent;
+	color: $text-color;
+	background-color: transparent;
+	vertical-align: middle;
+	transition:
+		color $input-btn-transition,
+		background-color $input-btn-transition,
+		border-color $input-btn-transition,
+		box-shadow $input-btn-transition;
+
+	@include touch-or-bp-down(sm) {
+		padding: $input-btn-padding-y-touch $default-padding-x-touch;
+
+		&.hairline-top {
+			@include hairline(top, #ccc);
+			border-top: none;
+			padding-top: $input-btn-padding-y-touch + 2 * $input-border-width;
+		}
+
+		&.hairline-start-padding {
+			@include hairline(top, #ccc, $start: $default-padding-x-touch);
+		}
+
+		&.hairline-start-icon-24 {
+			@include hairline(top, #ccc, $start: $default-padding-x-touch);
+		}
+
+		&.hairline-start-icon-28 {
+			@include hairline(top, #ccc, $start: (2 * $default-padding-x-touch + 28px));
+
+			.icon[width="24"] {
+				margin-left: 2px;
+				margin-right: $default-padding-x-touch + 2px;
+			}
+		}
+
+		&[class*="hairline"]:only-child {
+			@include hairline-disabled(top);
+		}
+	}
+
+	@include mouse-and-bp-up(md) {
+		border-radius: $input-btn-border-radius;
+	}
+
+	&:focus:not(.btn-link) {
+		outline: none;
+	}
+
+	&:not(:disabled) {
+		cursor: pointer;
+	}
+
+	&:disabled {
+		opacity: 0.5;
+		cursor: default;
+	}
+
+	.icon {
+		@include variant(".btn.icon-left") {
+			@include touch-or-bp-down(sm) {
+				margin-right: $default-padding-x-touch;
+				vertical-align: top;
+			}
+
+			@include mouse-and-bp-up(md) {
+				margin-right: $space-min;
+			}
+		}
+	}
+}
+
+.btn-circle,
+.btn-icon {
+	.icon {
+		html:not(.specifity) & {
+			vertical-align: top;
+		}
+	}
+}
+
+// Icon button
+
+.btn-icon {
+	color: $icon-color;
+	line-height: $space-md;
+
+	@include touch-or-bp-down(sm) {
+		padding: $input-btn-padding-y-touch $input-btn-padding-x-touch;
+	}
+
+	@include touch-keyboard-or-bp-down(sm) {
+		&:focus {
+			outline: $outline-width solid $focus-color;
+			outline-offset: -$outline-width;
+		}
+	}
+
+	@include mouse-and-bp-up(md) {
+		padding: $space-min;
+
+		&.active {
+			background-color: $btn-icon-active-bg;
+		}
+	}
+
+	@include mouse-keyboard-and-bp-up(md) {
+		&:focus {
+			border-color: $btn-secondary-color;
+			box-shadow: 0 0 0 $input-btn-focus-width $btn-secondary-color;
+		}
+	}
+
+	.icon {
+		position: static;
+		margin: 0;
+	}
+
+	@include mouse-and-bp-up(md) {
+		@include state(".btn-icon:active") {
+			&,
+			.icon {
+				color: $icon-active-color;
+			}
+		}
+
+		@include state(".btn-icon.active") {
+			&,
+			.icon {
+				color: $btn-icon-active-color;
+			}
+		}
+	}
+}
+
+.btn-link {
+	display: inline;
+	border: 0;
+	color: $link-color;
+	background-color: transparent;
+
+	html:not(.specifity) & {
+		padding: 0;
+	}
+
+	.icon {
+		color: inherit;
+	}
+}
+
+.btn-lg {
+	font-size: $font-size-lg;
+	padding: $input-btn-padding-y-lg $input-btn-padding-x-lg;
+}
+
+.btn-xl {
+	// 48px height
+}
+
+.btn-xxl {
+	// 64px height
+}
+
+.btn-primary {
+	@include button-variant($btn-primary-color);
+}
+
+.btn-outline-primary {
+	@include button-variant($btn-primary-color, $outline: true);
+}
+
+.btn-secondary {
+	@include button-variant($btn-secondary-color);
+}
+
+.btn-outline-secondary {
+	@include button-variant($btn-secondary-color, $outline: true);
+}
+
+.btn-transparent-secondary {
+	color: $btn-secondary-color;
+}
+
+.btn-outline-light {
+	@include button-variant($btn-light-color, $outline: true);
+}
+
+.btn-default {
+	color: $btn-default-color;
+	border-color: $btn-default-border-color;
+
+	@include state(".btn-default:hover, .btn-file input:hover + .btn-default") {
+		background-color: $btn-default-hover-bg;
+		box-shadow: 0 2px 4px  rgba($shade-10, 0.06);
+	}
+
+	@include state(".btn-default:active, .btn-file input:active + .btn-default") {
+		background-color: darken($shade-1, 4%);
+		box-shadow: none;
+	}
+
+	@include state(".btn-default:disabled, .btn-file input:disabled + .btn-default") {
+		box-shadow: none;
+	}
+
+	.keyboard & {
+		@include state(".btn-default:focus, .btn-file input:focus + .btn-default") {
+			border-color: $secondary;
+			box-shadow: 0 0 0 $input-btn-focus-width $secondary;
+		}
+
+		@include state(
+			".btn-default:focus:hover,
+			.btn-file input:focus:hover + .btn-default"
+		) {
+			border-color: lighten($secondary, 4%);
+	 		box-shadow:
+	 			0 0 0 $input-btn-focus-width lighten($secondary, 4%),
+	 			0 4px 4px $btn-box-shadow-color;
+		}
+
+		@include state(
+			".btn-default:focus:active,
+			.btn-file input:focus:active + .btn-default"
+		) {
+			border-color: darken($secondary, 8%);
+			box-shadow: 0 0 0 $input-btn-focus-width darken($secondary, 8%);
+		}
+	}
+}
+
+
+// Circle button
+
+.btn-circle {
+	@include touch-or-bp-down(sm) {
+		width: $space-lg;
+		height: $space-lg;
+		padding: 0;
+		border-radius: 50%;
+		line-height: 1; // Center icon vertically
+	}
+}
+
+
+// Block button
+
+.btn-block {
+	display: block;
+	width: 100%;
+}
+
+
+// Twisty
+
+.twisty {
+	display: block;
+	width: $space-md;
+	height: $space-md;
+	border: 0;
+	padding: 0;
+	background: transparent;
+	cursor: pointer;
+	transition: transform $twisty-transition;
+
+	.icon-triangle {
+		vertical-align: top;
+		transform: rotate(90deg);
+	}
+}
+
+.btn-group {
+	display: inline-flex;
+
+	> .btn {
+		position: relative;
+
+		&:hover,
+		&:focus {
+			z-index: 1;
+		}
+
+		&:not(:last-of-type) {
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+
+		&:not(:first-of-type) {
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+			margin-left: -$input-border-width;
+		}
+
+		// Prevent dark border due to overlap
+		& + .btn:disabled {
+			margin-left: 0;
+			border-left-width: 0;
+		}
+	}
+
+	> .dropdown-toggle {
+		&.btn-lg {
+			padding-left: $input-btn-padding-x-lg - 3px; // Square button
+			padding-right: $input-btn-padding-x-lg - 3px;
+		}
+	}
+}
+
+// File upload button
+
+::-webkit-file-upload-button {
+	@include mouse-and-bp-up(md) {
+  	-webkit-appearance: initial; // Reset normalize
+  	font: initial; // Reset normalize
+  }
+}
+
+.btn-file {
+	display: flex;
+	position: relative;
+
+	input {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 1;
+		font-size: 10rem; // Needed for pointer cursor
+		opacity: 0;
+		cursor: pointer;
+		overflow: hidden; // Fix overflow in mobile browsers
+
+		&:focus {
+			position: absolute; // Reset
+		}
+	}
+}

@@ -1,0 +1,72 @@
+//
+// Panel
+// --------------------------------------------------
+
+.panel {
+	flex: 1 1 0;
+	background-color: $panel-bg;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	padding-bottom: $space-min;
+	background-clip: content-box;
+
+	&:last-child {
+		padding-bottom: 0;
+	}
+
+	.panel-header {
+		flex: 0 0 auto;
+		color: $panel-header-color;
+		display: flex;
+		position: relative;
+		z-index: 1;
+
+		nav {
+			width: 100%;
+		}
+	}
+
+	.panel-body {
+		flex: 1 1 0;
+
+		@include touch-or-bp-down(sm) {
+			overflow-y: scroll;
+			-webkit-overflow-scrolling: touch; // Momentum scrolling for iOS 10–
+		}
+
+		@include mouse-and-bp-up(md) {
+			display: flex;
+			flex-direction: column;
+			overflow: hidden; // Fix scrolling on md screens (or min-height: 0)
+		}
+
+		&.loading {
+			@include touch-or-bp-down(sm) {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+		}
+
+		// Disable scrolling while dragging creators on mobiles, keep scrollbar
+		@include state(".drag-layer + .library-container") {
+			@include touch-or-bp-down(sm) {
+				pointer-events: none;
+
+				.tab-pane {
+					pointer-events: auto; // Reset
+				}
+			}
+		}
+	}
+
+	.panel-backdrop {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background-color: $panel-backdrop-bg;
+	}
+}

@@ -1,0 +1,228 @@
+//
+// Navbar
+// --------------------------------------------------
+
+.navbar {
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	font-size: $navbar-font-size;
+	width: 100%;
+	height: $navbar-height-xs;
+	position: relative;
+	left: 0;
+	padding: 0 $space-md;
+	background-color: $navbar-bg;
+	font-family: "AvenirNextLTPro", $font-family-sans-serif;
+	-webkit-font-smoothing: auto;
+	-moz-osx-font-smoothing: auto;
+
+	@include bp-up(sm) {
+		flex: 0 0 auto;
+		height: $navbar-height-sm;
+		background: $navbar-bg;
+	}
+
+	.navbar-brand,
+	.search-toggle,
+	.search,
+	.navbar-toggle {
+		position: relative;
+		z-index: $z-index-navbar;
+	}
+
+	.navbar-brand {
+		display: flex;
+		margin: 0;
+		margin-right: auto;
+
+		a {
+			display: block;
+			background: url("./images/zotero-logo.svg") 0 0 no-repeat;
+			background-size: 100%;
+			text-indent: 100%;
+			white-space: nowrap;
+			width: $navbar-brand-width-xs;
+			height: $navbar-brand-height-xs;
+			overflow: hidden;
+
+			@include bp-up(sm) {
+				width: $navbar-brand-width-sm;
+				height: $navbar-brand-height-sm;
+			}
+
+			&:focus {
+				.keyboard & {
+					outline-offset: 8px;
+				}
+			}
+		}
+	}
+
+	.main-nav {
+		display: none;
+
+		@media (min-width: $navbar-breakpoint) {
+			display: flex;
+		}
+
+		.nav-link {
+			color: $navbar-link-color;
+
+			html:not(.specifity) & {
+				padding: $navbar-padding-y $navbar-padding-x;
+			}
+
+			&:focus {
+				.keyboard & {
+					outline-offset: -$outline-width;
+				}
+			}
+		}
+
+		.active .nav-link {
+			color: $navbar-link-active-color;
+		}
+
+		.dropdown-toggle {
+			html:not(.specifity) & {
+				@include state(".show .dropdown-toggle") {
+					color: $navbar-dropdown-toggle-active-color;
+
+					.icon {
+						color: inherit;
+					}
+				}
+			}
+		}
+
+		.truncate {
+			@include text-truncate;
+			display: inline-block;
+			vertical-align: middle;
+			max-width: 9vw;
+		}
+	}
+
+	.input-group.search {
+		flex: 0 0 auto;
+		align-self: center;
+		width: $search-width;
+		font-size: 14px;
+		line-height: 20px; // Special height, like Upgrade button on zotero.org
+		margin-left: $navbar-padding-x;
+
+		@include bp-down(xs) {
+			display: none;
+		}
+
+		.dropdown {
+			position: absolute;
+			left: 5px;
+			top: 3px;
+		}
+
+		.form-control {
+			html:not(.specifity) & {
+				padding: 5px 25px 5px 36px;
+			}
+		}
+	}
+
+	.search-toggle,
+	.touch-tag-selector-toggle {
+		.icon {
+			color: $icon-bar-bg;
+		}
+	}
+
+	.navbar-toggle {
+		@include bp-down-normalized(xs) {
+			padding: 11px 8px;
+			margin-right: -$space-xs;
+		}
+
+		@include bp-up-normalized(sm) {
+			padding: 6px 7px;
+			margin: 0 (-$space-xs) 0 (2 * $navbar-padding-x - $space-xs);
+		}
+
+		.icon-bar {
+			display: block;
+			width: $icon-bar-width;
+			height: $icon-bar-height;
+			background: $icon-bar-bg;
+
+			& + .icon-bar {
+				margin-top: $icon-bar-spacing;
+			}
+		}
+	}
+
+	html:not(.specifity) & {
+		.dropdown-menu {
+			padding: $space-xs 0;
+			min-width: 160px;
+			margin: 2px 0 0;
+			box-shadow: none;
+			background-clip: padding-box;
+			border: 1px solid rgba(0, 0, 0, 0.15);
+			border-radius: 4px;
+
+			@include variant(".search .dropdown-menu") {
+				padding: $space-min 0;
+			}
+
+			.dropdown-item {
+				padding: $space-min $space-md;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+
+				@include variant(".search .dropdown-menu") {
+					padding: (4.5px + $input-border-width) $space-sm;
+				}
+			}
+
+			.dropdown-divider {
+				margin: $space-xs 0;
+			}
+
+			.badge {
+				background-color: $shade-6;
+				color: $shade-0;
+			}
+		}
+	}
+
+	.upgrade-storage {
+		font-size: 14px;
+		margin-left: 2 * $navbar-padding-x;
+		text-decoration: none;
+
+		html:not(.specifity) & {
+			padding: 4.5px $space-sm;
+			border-radius: $input-btn-border-radius;
+		}
+	}
+}
+
+.nav-cover {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: $z-index-navbar;
+	background-color: rgba(0, 0, 0, 0);
+	visibility: hidden;
+		transition:
+			background-color $mobile-navbar-nav-transition,
+			visibility 0s linear $nav-transition-duration;
+
+	.navbar-nav-opened & {
+		background-color: rgba(0, 0, 0, 0.1);
+		visibility: visible;
+		transition: background-color $mobile-navbar-nav-transition;
+	}
+}

@@ -1,0 +1,158 @@
+//
+// Note list
+// --------------------------------------------------
+
+.note-list {
+	.note {
+		@include touch-or-bp-down(sm) {
+			display: flex;
+			padding: $note-list-padding-top $default-padding-x-touch $note-list-padding-bottom;
+			@include hairline(top, $note-border-color-touch, $start: (2 * $default-padding-x-touch + 28px));
+
+			&:first-child {
+				@include hairline-disabled(top);
+				padding-top: $note-list-padding-top - $border-width;
+			}
+
+			.icon-note {
+				align-self: center;
+				margin-right: $default-padding-x-touch;
+			}
+
+			.multiline-truncate {
+				flex: 1 1 auto;
+				@include multiline-truncate(2);
+			}
+
+			.icon-chevron-13 {
+				align-self: center;
+				transform: rotate(90deg);
+				color: $note-list-chevron-color;
+				margin: 0 (-$space-min) 0 ($space-md - 5px);
+
+				@include state(".editing .note-list") {
+					display: none;
+				}
+			}
+
+			.dropdown {
+				align-self: center;
+				margin-left: $default-padding-x-touch;
+			}
+		}
+
+		@include mouse-and-bp-up(md) {
+			padding: ($space-md - 5px) $default-padding-x;
+			position: relative;
+
+			&:focus {
+				outline: none;
+			}
+
+			&:first-child {
+				@supports not (-webkit-font-smoothing: subpixel-antialiased) {
+					padding-top: $space-md - 5px - $border-width;
+				}
+			}
+
+			&::before,
+			&::after {
+				position: absolute;
+				left: $default-padding-x;
+				right: $default-padding-x;
+				height: $border-width;
+				background-color: $note-border-color;
+			}
+
+			&::before {
+				content: "";
+				top: 0;
+			}
+
+			&::before {
+				@include variant(".note:first-child") {
+					@supports not (-webkit-font-smoothing: subpixel-antialiased) {
+						@include variant("html.scrollbar-style-permanent") {
+							content: none;
+						}
+					}
+				}
+			}
+
+			&::after {
+				@include variant(".note:last-child") {
+					content: "";
+					bottom: 0;
+					background-color: transparent;
+					box-shadow: 0 1px $note-border-color;
+				}
+			}
+
+			&.selected {
+				background-color: $note-active-bg;
+
+				&:focus {
+					color: $note-focus-color;
+					background-color: $note-focus-bg;
+				}
+
+				&::before,
+				&::after {
+					content: none;
+				}
+
+				& + .note {
+					border-top: $border-width solid $note-active-bg;
+					padding-top: $space-md - 6px;
+
+					@include state(".selected:focus") {
+						border-top-color: $note-focus-bg;
+					}
+
+					&::before {
+						content: none;
+					}
+				}
+			}
+
+			.dropdown {
+				position: absolute;
+				top: 9px;
+				right: $default-padding-x - $space-min - $input-border-width;
+				opacity: 0.01;
+
+				@include state(".note:hover", ".dropdown.show", '.note.selected', ".note:focus") {
+					opacity: 1;
+				}
+
+				@include state(".note.selected + .note") {
+					top: 9px - $border-width;
+				}
+
+				.dropdown-toggle {
+					background-color: $panel-bg;
+					transition:
+						color $input-btn-transition,
+						border-color $input-btn-transition,
+						box-shadow $input-btn-transition;
+
+					@include state(".note.selected") {
+						background-color: $note-active-bg;
+					}
+
+					@include state(".note.selected:focus-within") {
+						background-color: $note-focus-bg;
+
+						.icon {
+							color: $note-focus-color;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.multiline-truncate {
+		@include multiline-truncate(2);
+	}
+}

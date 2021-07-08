@@ -1,0 +1,109 @@
+//
+// Button
+//
+
+@mixin button-variant($color, $outline: null, $inverse: null) {
+	$btn-color: if($inverse, $shade-0, $color);
+	$shade-0: if($inverse, $color, $shade-0);
+
+	background-color: if($outline, transparent, $btn-color);
+	border-color: if($outline, $btn-color, transparent);
+
+	&,
+	.icon {
+		&:not(.specifity) {
+			color: if($outline, $btn-color, $shade-0);
+		}
+	}
+
+	&:hover {
+		@media (hover: hover) {
+			background-color: lighten($btn-color, 4%);
+			border-color: if($outline, lighten($btn-color, 4%), transparent);
+			box-shadow: 0 2px 4px $btn-box-shadow-color;
+		}
+
+		&,
+		.icon {
+			&:not(.specifity) {
+				color: $shade-0;
+			}
+		}
+	}
+
+	&:active,
+	.show > &.dropdown-toggle {
+		background-color: darken($btn-color, 8%);
+		border-color: if($outline, darken($btn-color, 8%), transparent);
+		box-shadow: none;
+
+		&,
+		.icon {
+			&:not(.specifity) {
+				color: $shade-0;
+			}
+		}
+	}
+
+	&:disabled {
+		background-color: if($outline, transparent, $btn-color);
+		border-color: if($outline, $btn-color, transparent);
+		box-shadow: none;
+
+		&,
+		.icon {
+			&:not(.specifity) {
+				color: if($outline, $btn-color, $shade-0);
+			}
+		}
+	}
+
+	&:focus {
+		.keyboard & {
+			box-shadow: 0 0 0 $input-btn-focus-width $btn-color;
+
+			&:hover {
+				border-color: if($outline, lighten($btn-color, 4%), transparent);
+				box-shadow:
+					0 0 0 $input-btn-focus-width lighten($btn-color, 4%),
+					0 4px 4px $btn-box-shadow-color;
+			}
+
+			&:active {
+				box-shadow: 0 0 0 $input-btn-focus-width darken($btn-color, 8%);
+			}
+		}
+	}
+
+	&.success,
+	.btn-group.success > & {
+		background-color: $btn-success-color;
+
+		&:hover {
+			@media (hover: hover) {
+				background-color: lighten($btn-success-color, 4%);
+			}
+		}
+
+		&:active {
+			background-color: darken($btn-success-color, 8%);
+		}
+
+		&:focus {
+			.keyboard & {
+				box-shadow: 0 0 0 $input-btn-focus-width $btn-success-color;
+
+				&:hover {
+					border-color: if($outline, lighten($btn-color, 4%), transparent);
+					box-shadow:
+						0 0 0 $input-btn-focus-width lighten($btn-success-color, 4%),
+						0 4px 4px $btn-box-shadow-color;
+				}
+
+				&:active {
+					box-shadow: 0 0 0 $input-btn-focus-width darken($btn-success-color, 8%);
+				}
+			}
+		}
+	}
+}

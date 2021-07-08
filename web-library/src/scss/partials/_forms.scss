@@ -1,0 +1,464 @@
+//
+// Forms
+// --------------------------------------------------
+
+::placeholder {
+	color: #777;
+}
+
+.form { // We do not use a form element for its side effects
+	@include variant(".modal .form") {
+		@include touch-or-bp-down(sm) {
+			margin: -$modal-inner-padding;
+			padding: $form-group-margin-touch 0;
+		}
+	}
+
+	@include variant(".popover .form") {
+		margin: $space-min 0;
+	}
+}
+
+.form-row {
+	@include mouse-and-bp-up(md) {
+		display: flex;
+		flex-wrap: wrap;
+		margin: 0 (-$form-grid-gutter-width / 2);
+	}
+
+	> .col,
+	> [class*="col-"] {
+		@include mouse-and-bp-up(md) {
+			padding-left: $form-grid-gutter-width / 2;
+			padding-right: $form-grid-gutter-width / 2;
+		}
+	}
+}
+
+fieldset {
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.form-group {
+	@include touch-or-bp-down(sm) {
+		display: flex;
+		padding: $input-border-width $input-btn-padding-x-touch;
+		margin-bottom: $form-group-margin-touch;
+		background-color: $input-bg;
+		position: relative;
+		@include hairline(top, $input-border-color-touch);
+		@include hairline(bottom, $input-border-color-touch);
+
+		@include variant(".form-group:last-child", "fieldset .form-group") {
+			margin-bottom: 0;
+		}
+
+		@include variant("fieldset .form-group") {
+			&:not(:first-child) {
+				@include hairline(top, $input-border-color-touch, $start: $default-padding-x-touch);
+			}
+
+			&:not(:last-child) {
+				@include hairline-disabled(bottom);
+				padding-bottom: 0;
+			}
+		}
+	}
+
+	@include touch-keyboard-or-bp-down(sm) {
+		&:focus-within:not(.checkboxes):not(.radios) {
+			&::before,
+			&::after {
+				content: "";
+				position: absolute;
+				left: 0;
+				right: 0;
+				height: $outline-width;
+				background-color: $focus-color;
+				z-index: 2;
+			}
+
+			&:before {
+				bottom: calc(100% - #{$input-border-width});
+			}
+
+			&:after {
+				top: calc(100% - #{$input-border-width});
+			}
+		}
+	}
+
+	@include mouse-and-bp-up(md) {
+		margin-bottom: $form-group-margin;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
+label {
+	.editing &,
+	.form-group & {
+		@include touch-or-bp-down(sm) {
+			flex: 0 0 auto;
+			line-height: $input-btn-height-touch;
+			padding: 0 $input-btn-padding-x-touch;
+			background-color: $input-bg;
+			color: $label-color;
+
+			.icon {
+				vertical-align: top;
+				margin-top: ($input-btn-height-touch - 28px) / 2;
+			}
+		}
+	}
+}
+
+.col-form-label {
+	@include mouse-and-bp-up(md) {
+		padding-top: ($input-btn-padding-y + $input-border-width);
+		padding-bottom: ($input-btn-padding-y + $input-border-width);
+	}
+}
+
+.input-group {
+	flex: 1 1 auto;
+	display: flex;
+	min-width: 0;
+	position: relative;
+
+	.icon-spin {
+		position: absolute;
+
+		@include touch-or-bp-down(sm) {
+			right: $input-btn-padding-x-touch;
+			top: calc(50% - #{$space-lg / 2});
+		}
+
+		@include mouse-and-bp-up(md) {
+			width: $icon-spin-size-sm;
+			height: $icon-spin-size-sm;
+			right: $space-min + $input-border-width;
+			top: $space-min + $input-border-width;
+
+			path {
+				stroke-width: 1.2px;
+			}
+		}
+	}
+
+	&.textarea {
+		@include touch-or-bp-down(sm) {
+			$textarea-padding:
+				($space-thumb - $font-size-mobile * $line-height-base-mobile) / 2;
+
+			padding-top: $textarea-padding;
+			padding-bottom: $textarea-padding;
+		}
+
+		&.busy {
+			&::after {
+				content: "";
+				position: absolute;
+				right: 0;
+				background-color: $body-bg;
+			}
+
+			.icon-spin {
+				top: auto;
+				z-index: 2; // Over generated content 'backdrop'
+			}
+
+			// Align backdrop and spinner with last line
+			@include touch-or-bp-down(sm) {
+				&::after,
+				.icon-spin {
+					right: $input-btn-padding-x-touch;
+					bottom: 9px;
+				}
+			}
+
+			@include mouse-and-bp-up(md) {
+				&::after,
+				.icon-spin {
+					bottom: 2px;
+					width: $icon-spin-size-sm;
+					height: $icon-spin-size-sm;
+				}
+			}
+		}
+	}
+
+	// Suggestions
+	.dropdown {
+		flex: 1 1 auto;
+	}
+}
+
+.form-control {
+	flex: 1 1 auto;
+	display: block;
+	width: 100%;
+	color: $input-color;
+	background-color: $input-bg;
+	appearance: none;
+	transition:
+		border-color $input-btn-transition,
+		box-shadow $input-btn-transition;
+
+	@include touch-or-bp-down(sm) {
+		min-height: $input-btn-height-touch; // min-height: Take textarea into account
+		padding: 0 $input-btn-padding-x-touch;
+		border: none;
+	}
+
+	@include mouse-and-bp-up(md) {
+		padding: $input-btn-padding-y $input-btn-padding-x;
+		border: $input-border-width solid $input-border-color;
+		border-radius: $input-btn-border-radius;
+	}
+
+	&:focus {
+		outline: none;
+
+		@include mouse-and-bp-up(md) {
+			border: $input-border-width solid $focus-color;
+			box-shadow: 0 0 0 $input-btn-focus-width $focus-color;
+		}
+	}
+
+	.busy:not(.textarea) & {
+		@include touch-or-bp-down(sm) {
+			padding-right: $input-btn-padding-x-touch + $space-lg + 1px;
+		}
+
+		@include mouse-and-bp-up(md) {
+			padding-right: $space-min + $icon-spin-size-sm + 1px;
+		}
+	}
+
+	&.select {
+		@include mouse-and-bp-up(md) {
+			padding: 0;
+			border: none;
+		}
+	}
+
+	@at-root select#{&} {
+		&:focus {
+			color: $focus-color;
+		}
+	}
+}
+
+.form-control-lg {
+	@include mouse-and-bp-up(md) {
+		font-size: $font-size-lg;
+		padding: $input-btn-padding-y-lg $input-btn-padding-x-lg;
+	}
+
+	.busy:not(.textarea) & {
+		@include mouse-and-bp-up(md) {
+			padding-right: $icon-spin-size-sm + $icon-spin-spacing-lg;
+		}
+	}
+}
+
+.icon-spin {
+	.form-control-lg + & {
+		@include mouse-and-bp-up(md) {
+			top: $icon-spin-spacing-lg;
+			right: $icon-spin-spacing-lg;
+			width: $icon-spin-size-sm;
+			height: $icon-spin-size-sm;
+
+			path {
+				stroke-width: 1.2px;
+			}
+		}
+	}
+}
+
+textarea {
+	resize: vertical;
+
+	.auto-resizer & {
+		resize: none;
+	}
+}
+
+.native-select-wrap {
+	@include touch-or-bp-down(sm) {
+		flex: 1 1 auto;
+		display: flex;
+		align-items: center;
+		min-width: 0;
+		position: relative;
+
+		select {
+			appearance: none;
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 1;
+			opacity: 0;
+
+			&:focus {
+				position: absolute; // Reset
+
+				& + .form-control {
+					color: $focus-color;
+				}
+			}
+		}
+
+		.form-control {
+			@include text-truncate(clip);
+			padding-right: 0;
+			margin-right: $input-btn-padding-x-touch;
+			line-height: $input-btn-height-touch; // Center text vertically
+		}
+	}
+}
+
+.checkboxes,
+.radios,
+.files {
+	@include touch-or-bp-down(sm) {
+		@include hairline-disabled(top);
+		@include hairline-disabled(bottom);
+		display: block;
+		padding: 0;
+	}
+}
+
+.checkbox,
+.radio,
+.file {
+	@include touch-or-bp-down(sm) {
+		display: flex;
+		align-items: center;
+		padding: $border-width $input-btn-padding-x-touch;
+		@include hairline(top, $input-border-color-touch);
+		@include hairline(bottom, $input-border-color-touch);
+
+		&:not(:first-child) {
+			@include hairline(top, $input-border-color-touch, $start: $default-padding-x-touch);
+		}
+
+		&:not(:last-child) {
+			@include hairline-disabled(bottom);
+			padding-bottom: 0;
+		}
+
+		label,
+		&.file span {
+			flex: 1 1 auto;
+			order: -1;
+			color: $text-color;
+		}
+
+		input,
+		&.file button {
+			margin: 0 $input-btn-padding-x-touch;
+		}
+	}
+
+	@include touch-keyboard-or-bp-down(sm) {
+		&:focus-within {
+			&::before,
+			&::after {
+				content: "";
+				position: absolute;
+				left: 0;
+				right: 0;
+				height: $outline-width;
+				background-color: $focus-color;
+				z-index: 2;
+				width: 100%; // Reset hairline styles
+			}
+
+			&:before {
+				bottom: calc(100% - #{$input-border-width});
+			}
+
+			&:after {
+				top: calc(100% - #{$input-border-width});
+			}
+
+			& + .checkbox,
+			& + .radio {
+				@include hairline-disabled(top);
+			}
+		}
+
+		input {
+			outline: none;
+		}
+	}
+
+	// todo
+	@include mouse-and-bp-up(md) {
+		display: flex;
+	}
+}
+
+input[type="checkbox"] {
+	@include touch-or-bp-down(sm) {
+		-webkit-appearance: none;
+		appearance: none;
+		flex: 0 0 auto;
+		width: $space-lg;
+		height: $space-lg;
+		border-radius: $space-lg / 2;
+		background-color: $input-bg;
+		border: $input-border-width solid $checkbox-border-touch;
+
+		&:checked {
+			border: 0;
+			background: image-url("icons/tick-white.svg") no-repeat 0 0 $checkbox-checked-bg-touch;
+		}
+	}
+
+	// todo
+	@include mouse-and-bp-up(md) {
+		font-size: 16px;
+		margin: 2px 6px 0 0;
+	}
+
+	@include mouse-keyboard-and-bp-up(md) {
+		&:focus {
+			outline: auto;
+
+			// Target Firefox only (nicer outline)
+			@supports (-moz-appearance: none) {
+				outline: initial;
+			}
+		}
+	}
+}
+
+input[type="radio"] {
+	@include touch-or-bp-down(sm) {
+		-webkit-appearance: none;
+		appearance: none;
+		flex: 0 0 auto;
+		width: $space-lg;
+		height: $space-lg;
+		background-color: transparent;
+		border: 0;
+
+		&:checked {
+			background: image-url("icons/tick-blue.svg") no-repeat 0 0;
+		}
+	}
+}
+
+input:invalid {
+	outline: $outline-width solid $error;
+}

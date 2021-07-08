@@ -1,0 +1,12 @@
+[submodule "tinymce-clean-server"]
+	path = tinymce-clean-server
+	url = https://github.com/zotero/tinymce-clean-server
+[submodule "stream-server"]
+	path = stream-server
+	url = https://github.com/zotero/stream-server
+[submodule "htdocs/zotero-schema"]
+	path = htdocs/zotero-schema
+	url = https://github.com/zotero/zotero-schema.git
+[submodule "web-library"]
+	path = web-library
+	url = https://github.com/zotero/web-library.git

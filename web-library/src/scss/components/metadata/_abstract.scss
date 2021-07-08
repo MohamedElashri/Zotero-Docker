@@ -1,0 +1,128 @@
+//
+// Abstract
+// --------------------------------------------------
+
+.abstract {
+	@include touch-or-bp-down(sm) {
+		margin: 8px $default-padding-x-touch 8px;
+		border-top: 1px solid $metadata-separator-color;
+	}
+
+	@include bp-down-normalized(xs) {
+		border-top: 0;
+	}
+
+	@include mouse-and-bp-up(md) {
+		margin: 0 $default-padding-x;
+		padding-bottom: 15px - 7px;
+	}
+
+	@include mouse-and-bp-only(lg) {
+		border-top: 1px solid $metadata-separator-color;
+	}
+
+	&.editing {
+		@include touch-or-bp-down(sm) {
+			margin: 0 $abstract-margin-x-touch 10px;
+			background-color: $input-bg;
+			border-radius: $input-border-radius;
+			border-top: 0;
+			padding: 0 $input-btn-padding-x-touch;
+		}
+
+		@include touch-and-bp-only(md) {
+			margin-top: $form-group-margin-touch;
+			margin-bottom: $form-group-margin-touch;
+		}
+
+		@include bp-down-normalized(xs) {
+			margin: 0 0 10px 0;
+			border-radius: 0;
+			border-top: $separator-width solid $separator-color;
+			border-bottom: $separator-width solid $separator-color;
+		}
+	}
+
+	&.empty-abstract {
+		&:not(.editing) {
+			@include touch-or-bp-down(sm) {
+				display: none;
+			}
+		}
+
+		@include mouse-and-bp-only(md) {
+			padding-top: 14px;
+		}
+
+		@include mouse-and-bp-only(lg) {
+			padding-top: 9px; // metadata-list spacing
+		}
+	}
+
+	::placeholder {
+		color: transparent;
+	}
+}
+
+.abstract-body {
+	@include mouse-and-bp-up(md) {
+		padding-bottom: 2px; // 24px, use padding to prevent collapsing margins
+	}
+
+	.editing & {
+		@include touch-or-bp-down(sm) {
+			.input-group.textarea {
+				margin-top: -6px;
+				padding-top: 0;
+			}
+		}
+	}
+}
+
+.abstract-heading {
+	color: $key-color;
+	cursor: default; // Reset
+	user-select: none; // Reset
+	pointer-events: none;
+
+	@include touch-or-bp-down(sm) {
+		margin-top: 0;
+		padding-top: 10px; // metadata-list spacing
+		margin-bottom: 4px; // metadata-list spacing
+		line-height: $line-height-base;
+	}
+
+	@include bp-down-normalized(xs) {
+		margin-top: 0;
+		padding-top: 0;
+		margin-bottom: 0;
+	}
+
+	@include mouse-and-bp-up(md) {
+		font-size: $font-size-base;
+		line-height: $metadata-list-line-height;
+		margin-top: 15px - 8px;
+		margin-bottom: 0;
+		padding-bottom: 2px;
+	}
+
+	@include mouse-and-bp-only(lg) {
+		margin-top: 15px - 8px;
+		margin-bottom: 0;
+		padding-bottom: 2px;
+	}
+
+	.empty-abstract & {
+		@include mouse-and-bp-up(md) {
+			display: none;
+		}
+	}
+
+	.editing & {
+		@include touch-or-bp-down(sm) {
+			padding: 0 $input-btn-padding-x-touch;
+			margin-bottom: 0;
+			line-height: $space-thumb;
+		}
+	}
+}

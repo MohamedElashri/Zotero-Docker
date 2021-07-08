@@ -1,0 +1,129 @@
+//
+// Bibliography modal
+//
+
+.bibliography-modal {
+	.modal-content {
+		@include mouse-and-bp-up(md) {
+			min-height: calc(100vh - 2 * #{$space-xl});
+			overflow: visible; // Modal needs overflow for split button dropdown, so we need to reset the border-radius
+		}
+	}
+
+	.modal-header {
+		@include mouse-and-bp-up(md) {
+			border-top-left-radius: $modal-border-radius;
+			border-top-right-radius: $modal-border-radius;
+		}
+	}
+
+	.modal-body {
+		@include mouse-and-bp-up(md) {
+			flex: 1 1 auto;
+			padding-top: 0;
+
+			&.loading {
+				display: flex;
+				flex-direction: column;
+			}
+		}
+
+		&:focus {
+			.keyboard & {
+				padding-left: $modal-inner-padding - $outline-width;
+				padding-right: $modal-inner-padding - $outline-width;
+			}
+		}
+	}
+
+	.modal-footer {
+		border-bottom-left-radius: $modal-border-radius;
+		border-bottom-right-radius: $modal-border-radius;
+	}
+
+	.form {
+		flex: 1 1 auto;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.citation-options {
+		@include touch-or-bp-down(sm) {
+			margin-bottom: $form-group-margin-touch;
+		}
+
+		@include mouse-and-bp-up(md) {
+			position: sticky;
+			top: 0;
+			width: 100%;
+			background-color: $modal-content-bg;
+			padding-top: $form-group-margin;
+			padding-bottom: $form-group-margin;
+			border-bottom: $border-width solid $modal-border-color;
+			margin-bottom: $modal-inner-padding;
+		}
+
+		@include state(".modal-body:focus .citation-options") {
+			@include mouse-keyboard-and-bp-up(md) {
+				padding-top: $form-group-margin - $outline-width;
+			}
+		}
+	}
+
+	.style-selector-container {
+		@include touch-or-bp-down(sm) {
+			flex-direction: column;
+			margin-bottom: $form-group-margin-touch;
+		}
+
+		@include mouse-and-bp-up(md) {
+			flex: 1 1 auto;
+			display: flex;
+		}
+
+		.input-group {
+			@include touch-or-bp-down(sm) {
+				margin-top: -6px;
+				padding-bottom: 9px;
+			}
+		}
+
+		.form-control {
+			@include touch-or-bp-down(sm) {
+				line-height: $line-height-base;
+				height: auto;
+				white-space: normal;
+				overflow: visible;
+				padding-right: $input-btn-padding-x-touch;
+				margin-right: 0;
+			}
+		}
+	}
+
+	.style-selector {
+		.select-option:last-child {
+			color: $link-color;
+			-webkit-font-smoothing: subpixel-antialiased;
+			-moz-osx-font-smoothing: grayscale;
+		}
+	}
+
+	.language-selector-container {
+		@include mouse-and-bp-up(md) {
+			flex: 1 1 auto;
+			display: flex;
+			padding-left: $space-xs;
+		}
+	}
+
+	.bibliography-container {
+		padding: 0 $modal-inner-padding;
+
+		@include state(".loading .bibliography-container") {
+			flex: 1 1 auto;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+	}
+}

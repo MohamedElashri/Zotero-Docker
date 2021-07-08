@@ -1,0 +1,402 @@
+//
+// Collection tree
+// --------------------------------------------------
+
+.collection-tree {
+	flex: 1 1 0;
+
+	@include touch-or-bp-down(sm) {
+		display: flex;
+		flex-direction: column;
+		line-height: $line-height-large-touch;
+		min-height: 0; // #290 Fix height in short viewports
+	}
+
+	@include mouse-and-bp-up(md) {
+		padding: $collection-tree-padding-y 0;
+		overflow: auto;
+		line-height: $line-height-large;
+	}
+
+	section {
+		& + section {
+			@include touch-or-bp-down(sm) {
+				margin-top: $collection-tree-section-spacing;
+			}
+		}
+	}
+
+	h4 {
+		color: $collection-tree-headings-color;
+		margin: 0;
+		padding: 0 $collection-tree-padding-x 0 $collection-tree-padding-left;
+
+		@include touch-or-bp-down(sm) {
+			@include hairline(top, $touch-collection-tree-border);
+			padding: $border-width $collection-tree-padding-x-touch 0;
+			background-color: $touch-collection-tree-headings-bg;
+		}
+	}
+
+	.item-container {
+		display: flex;
+		align-items: center;
+		outline-offset: -$outline-width;
+		position: relative;
+
+		@include touch-or-bp-down(sm) {
+			padding: $border-width $default-padding-x-touch 0;
+			@include hairline(top, $touch-collection-tree-border, $start: (2 * $default-padding-x-touch + 28px));
+		}
+
+		@include mouse-and-bp-up(md) {
+			height: $line-height-large;
+			padding-right: $default-padding-x;
+		}
+
+		@include variant("li:first-child > .item-container") {
+			@include touch-or-bp-down(sm) {
+	 			@include hairline-disabled(top);
+	 		}
+		}
+
+		@include variant(".level-0:nth-child(3) > ul > li:first-child > .item-container") {
+			@include touch-or-bp-down(sm) {
+	 			@include hairline(top, $touch-collection-tree-border);
+	 		}
+		}
+
+		@include variant("li:last-child > .item-container") {
+			@include touch-or-bp-down(sm) {
+				background-color: $sidebar-bg;
+
+				&::after {
+					content: "";
+					position: absolute;
+					z-index: -1;
+					right: 0;
+					bottom: 0;
+					left: 2 * $default-padding-x-touch + 28px;
+					height: 1px;
+					box-shadow: 0 1px mix($touch-collection-tree-border, $sidebar-bg, 50%);
+
+					@media (min-resolution: 2dppx) {
+						box-shadow: 0 1px $touch-collection-tree-border;
+						transform: translateY(-0.5px);
+					}
+				}
+			}
+		}
+
+		@include state("li.selected > .item-container", "li.open > .item-container") {
+			@include touch-or-bp-down(sm) {
+				background: $touch-collection-tree-active-bg;
+				@include hairline-disabled(top);
+			}
+		}
+
+		@include state("li.selected + li > .item-container", "li.open + li > .item-container") {
+			@include touch-or-bp-down(sm) {
+				@include hairline-disabled(top);
+			}
+		}
+
+		@include state("li.selected > .item-container") {
+			@include mouse-and-bp-up(md) {
+				background: $collection-tree-active-bg;
+			}
+		}
+
+		@include state(".item-container:focus") {
+			@include touch-keyboard-or-bp-down(sm) {
+				@include hairline-disabled(top);
+
+				@include state("li.selected > .item-container", "li.open > .item-container") {
+					outline-color: $sidebar-bg;
+				}
+			}
+		}
+
+		@include state("li.focus + li > .item-container") {
+			@include touch-keyboard-or-bp-down(sm) {
+				@include hairline-disabled(top);
+			}
+		}
+
+		@include state(".item-container.dnd-target", "li.selected > .item-container.dnd-target") {
+			@include mouse-and-bp-up(md) {
+				@include dnd-target;
+			}
+		}
+
+		.twisty {
+			margin-left: -$collection-tree-padding-left;
+
+			@include touch-or-bp-down(sm) {
+				display: none;
+			}
+
+			.icon-triangle {
+				@include state(".open > .item-container") {
+					transform: scaleY(-1);
+				}
+			}
+		}
+
+		.icon {
+			@include touch-or-bp-down(sm) {
+				@include state("li.selected > .item-container") {
+					color: $touch-collection-tree-active-color;
+				}
+			}
+
+			@include mouse-and-bp-up(md) {
+				&:not(.icon-spin) {
+					@include state("li.selected > .item-container") {
+						color: $collection-tree-active-icon-color;
+					}
+				}
+			}
+		}
+
+		> .icon {
+			flex: 0 0 auto;
+			margin-right: $space-xs;
+
+			&.touch {
+				margin-right: $space-md;
+			}
+
+			&.icon-library-read-only {
+				margin-right: $space-xs - 2px;
+
+				&.touch {
+					margin-right: $space-md - 2px;
+				}
+			}
+		}
+
+		> .truncate {
+			flex: 1 1 auto;
+			color: $collection-tree-color;
+			position: relative;
+
+			@include state("li.selected > .item-container", "li.open > .item-container") {
+				@include touch-or-bp-down(sm) {
+					color: $touch-collection-tree-active-color;
+				}
+			}
+
+			@include state("li.selected > .item-container") {
+				@include mouse-and-bp-up(md) {
+					color: $collection-tree-active-color;
+				}
+			}
+		}
+
+		.icon-spin {
+			margin-right: 0;
+			margin-left: $space-xs;
+		}
+
+		.btn-icon-plus {
+			@include mouse-and-bp-up(md) {
+				margin-right: -$space-min - $input-border-width;
+
+				@include state(".item-container:not(:focus-within)", "html:not(.keyboard)") {
+					visibility: hidden;
+				}
+
+				@include state(".item-container:hover") {
+					visibility: visible;
+				}
+			}
+		}
+
+		.dropdown {
+			@include touch-or-bp-down(sm) {
+				margin-left: $space-sm;
+				margin-right: 0;
+			}
+
+			@include mouse-and-bp-up(md) {
+				margin-left: $space-xs;
+				margin-right: -$space-min - $input-border-width;
+			}
+
+			.dropdown-toggle {
+				display: block;
+				border-radius: 0;
+
+				@include touch-or-bp-down(sm) {
+					padding: 0; // Simulate btn-link
+					border: 0;
+
+					@include state(".dropdown.show .dropdown-toggle") {
+						@include state("li.selected > .item-container") {
+							background-color: $body-bg;
+
+							.icon {
+								color: $touch-collection-tree-active-bg;
+							}
+						}
+					}
+				}
+
+				@include touch-keyboard-or-bp-down(sm) {
+					&:focus {
+						outline-offset: $outline-offset; // Simulate btn-link
+
+						@include state("li.selected > .item-container .dropdown-toggle", "li.open > .item-container .dropdown-toggle") {
+							outline-color: $touch-collection-tree-active-color;
+						}
+					}
+				}
+
+				@include mouse-and-bp-up(md) {
+					@include state(".item-container:not(:focus-within)", "html:not(.keyboard)") {
+						visibility: hidden;
+					}
+
+					@include state(".item-container:hover") {
+						visibility: visible;
+					}
+
+					@include state(".dropdown.show .dropdown-toggle") {
+						visibility: visible;
+
+						.icon {
+							color: $icon-active-color;
+						}
+					}
+				}
+
+				@include mouse-keyboard-and-bp-up(md) {
+					&:focus {
+						box-shadow: inset 0 0 0 $input-btn-focus-width $btn-secondary-color; // Align with twisty and item-container outline
+					}
+				}
+			}
+		}
+	}
+
+	@include mouse-and-bp-up(md) {
+		@for $i from 1 through $collection-tree-max-levels {
+			$sel: if($i == 1, "ul", selector-nest($sel, "ul"));
+
+			#{$sel} {
+				.item-container {
+					padding-left:
+						$collection-tree-padding-left
+							+ $collection-tree-indent
+							* ($i - 1);
+				}
+			}
+		}
+	}
+
+	.level-root {
+		@include touch-or-bp-down(sm) {
+			flex: 1 1 0;
+			height: 100%;
+			transform: translate3d(-25%, 0, 0);
+			transition: transform $nav-transition;
+
+			&.active {
+				transform: translate3d(0, 0, 0);
+			}
+
+			// Always translate root level on phones
+			.view-item-list-active & {
+				@include bp-down(xs) {
+					transform: translate3d(-25%, 0, 0);
+				}
+			}
+
+			.scroll-container-touch {
+				overflow: hidden; // Prevent scrolling of inactive levels
+				height: 100%;
+
+				@include state(".level-root.active") {
+					overflow: scroll;
+				}
+			}
+		}
+	}
+
+	.level {
+		z-index: $z-index-level;
+		transition: transform $nav-transition;
+
+		&.loading {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100%;
+			padding: 0;
+		}
+
+		.level {
+			@include touch-or-bp-down(sm) {
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				background: $sidebar-bg;
+				transform: translate3d(100%, 0, 0);
+
+				.nav {
+					height: 100%;
+					-webkit-overflow-scrolling: touch;
+					overflow: scroll; // Do not set on positioned elements (horizontal overflow)
+				}
+			}
+
+			@include mouse-and-bp-up(md) {
+				display: none;
+			}
+		}
+
+		.level-2 {
+			@include touch-or-bp-down(sm) {
+				transform: translate3d(125%, 0, 0);
+			}
+		}
+	}
+
+	.open,
+	.selected {
+		> .level {
+			@include touch-or-bp-down(sm) {
+				transform: translate3d(25%, 0, 0);
+				z-index: $z-index-level-active;
+
+				&.has-open {
+					transform: translate3d(0, 0, 0);
+
+					> .nav {
+						overflow: hidden; // Prevent scrolling of inactive levels
+					}
+				}
+			}
+		}
+
+		// Do not translate last level on tablets and in touch mode
+		.level-last {
+			&.has-open {
+				@include touch-or-bp-only(sm) {
+					transform: translate3d(25%, 0, 0);
+				}
+			}
+		}
+	}
+
+	.open {
+		@include mouse-and-bp-up(md) {
+			> .level {
+				display: block;
+			}
+		}
+	}
+}

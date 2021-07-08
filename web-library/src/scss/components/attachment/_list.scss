@@ -1,0 +1,20 @@
+//
+// Attachment list
+// --------------------------------------------------
+
+.attachment-list {
+	.attachment {
+		> .icon:first-child,
+		.truncate {
+			@include variant(".attachment.no-link") {
+				opacity: $no-link-opacity;
+			}
+		}
+
+		> .btn-icon:last-child {
+			@include touch-or-bp-down(sm) {
+				margin-right: -$input-btn-padding-x-touch - $border-width;
+			}
+		}
+	}
+}

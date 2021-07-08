@@ -1,0 +1,62 @@
+//
+// Messages
+// --------------------------------------------------
+
+.messages {
+	position: fixed;
+	top: 0;
+	right: -$permanent-scrollbar-width;
+	z-index: $z-index-errors;
+	overflow: auto;
+	width: calc(100% + #{$permanent-scrollbar-width});
+	max-height: 100%;
+	padding-bottom: $space-min; // Prevent clipping of box-shadow
+
+	@include bp-up(sm) {
+		width: $error-width + 2 * $error-spacing + $permanent-scrollbar-width;
+	}
+
+	&:empty {
+		display: none;
+	}
+
+	.message {
+		width: calc(100% - #{2 * $error-spacing + $permanent-scrollbar-width});
+		background: $message-bg;
+		padding: $space-xs $default-padding-x;
+		padding-right: $space-md + 2 * $default-padding-x;
+		border-left: 3px solid;
+		box-shadow: $menu-box-shadow;
+		border-radius: $menu-border-radius;
+		margin: $error-spacing;
+		user-select: text;
+		position: relative;
+
+		&.error {
+			border-left-color: $error;
+		}
+
+		&.info {
+			border-left-color: $info;
+		}
+
+		@include bp-up(sm) {
+			width: $error-width;
+		}
+	}
+
+	header {
+		font-weight: 700;
+	}
+
+	.btn {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+
+		@include mouse-and-bp-up(md) {
+			padding: 0 ($space-sm - $input-border-width);
+		}
+	}
+}

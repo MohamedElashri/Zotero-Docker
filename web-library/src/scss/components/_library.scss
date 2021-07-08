@@ -1,0 +1,248 @@
+//
+// Library
+// --------------------------------------------------
+
+.library {
+	display: flex;
+	min-height: 0;
+
+	//@include touch-or-bp-down(sm) {
+	//	@include hairline(top, $shade-4);
+	//}
+
+	@include bp-down(xs) {
+		flex: 1 1 auto;
+		flex-direction: column;
+	}
+
+	@include bp-up(sm) {
+		width: 100%;
+	}
+
+	@include mouse-and-bp-up(md) {
+		border-top: $border-width solid tint($shade-4, 50%, $tint: $body-bg);
+	}
+}
+
+.items {
+	min-width: 0; // Fix truncation of long values in metadata list
+	position: relative;
+
+	@include bp-down(xs) {
+		position: absolute;
+		left: 0;
+		top: $touch-header-height;
+		right: 0;
+		bottom: 0;
+		background-color: $items-bg;
+		transform: translate3d(100%, 0, 0);
+		transition: transform $nav-transition;
+
+		.view-item-list-active & {
+			transform: translate3d(0, 0, 0);
+		}
+
+		.view-item-details-active & {
+			transform: translate3d(-25%, 0, 0);
+		}
+
+		.touch-tag-selector-active & {
+			bottom: $touch-footer-height;
+			z-index: $z-index-touch-side-footer;
+		}
+
+		.search-backdrop {
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			background-color: $modal-backdrop-bg;
+		}
+
+		// Start searching in library view
+
+		// Init
+
+		.search-active.view-library-active & {
+			transform: translate3d(0, 0, 0);
+			background-color: transparent;
+			transition: none;
+		}
+
+		// Search results
+
+		.search-results.search-init.view-item-list-active & {
+			background-color: $items-bg;
+			transform: translate3d(0, 0, 0);
+			transition: background-color $fade-transition;
+		}
+
+		// Cancel search
+
+		.search-cancel.search-active.view-library-active & {
+			transform: translate3d(0, 0, 0);
+			background-color: transparent;
+			transition: opacity $fade-transition; // Reset
+		}
+
+		.search-cancel.search-results.view-library-active & {
+			transform: translate3d(0, 0, 0);
+			background-color: $items-bg;
+			transition: opacity $fade-transition; // Reset
+		}
+
+		.view-library-active & {
+			&.fade-exit-done {
+				transform: translate3d(100%, 0, 0);
+				transition: none;
+			}
+		}
+
+		// Start searching in item list view
+		// => No styles needed
+
+		// Start searching in item details view
+
+		// Init
+
+		.search-active.view-item-details-active & {
+			transform: translate3d(0, 0, 0);
+			transition: none;
+		}
+
+		// Search results
+
+		.search-results.search-init.view-item-list-active & {
+			background-color: $items-bg;
+			transform: translate3d(0, 0, 0);
+			transition: background-color $fade-transition;
+		}
+
+		.search-backdrop {
+			.search-results.view-item-list-active & {
+				transform: translate3d(0, 0, 0);
+			}
+		}
+
+		// Cancel search
+
+		.search-cancel.view-item-details-active & {
+			transform: translate3d(0, 0, 0);
+			transition: none;
+		}
+	}
+
+	@include bp-up(sm) {
+		flex: 1 1 auto;
+	}
+
+	@include tablet {
+		height: 100%;
+  	overflow: hidden;
+
+  	// Start searching in item details view
+
+  	// Init
+
+  	@include state(".search-init .items") {
+	  	.touch-nav {
+		  	.center-axis,
+		  	.inner {
+			  	transition: none;
+		  	}
+
+				.icon-previous + ul .current { // Hack: restrict animation to searches started in item details view on tablets
+					.center-axis {
+						@keyframes fade-in-search-results {
+							0% {
+								opacity: 0;
+							}
+
+							100% {
+								opacity: 1;
+							}
+						}
+
+						animation: fade-in-search-results $fade-transition-duration ease-in-out forwards;
+					}
+				}
+	  	}
+  	}
+	}
+
+	@include bp-only(md) {
+		flex-direction: column;
+	}
+
+	@include bp-up(md) {
+		display: flex;
+	}
+
+	.touch-footer {
+		display: none;
+
+		@include state(".items.select-mode") {
+			display: block;
+		}
+
+		// Make 6 buttons fit into the touch-footer on 4" phones
+		@include bp-down-normalized(xs) {
+			.btn-icon {
+				padding: $input-btn-padding-y-touch ($input-btn-padding-x-touch - $space-min);
+			}
+		}
+	}
+}
+
+.items-container {
+	@include tablet {
+		position: absolute;
+		top: $touch-header-height;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		transition: transform $nav-transition;
+	}
+
+	@include bp-down(xs) {
+		display: flex;
+		height: 100%;
+		flex-direction: column;
+	}
+
+	@include bp-up(sm) {
+		display: flex;
+		flex-direction: column;
+	}
+
+	@include mouse-and-bp-only(md) {
+		flex: 0 0 50%;
+	}
+
+	@include bp-up-normalized(lg) {
+		flex: 1 1 auto;
+	}
+
+	.view-item-details-active & {
+		@include bp-only(sm) {
+			transform: translate3d(-25%, 0, 0);
+		}
+
+		@include touch-and-bp-only(md) {
+			transform: translate3d(-25%, 0, 0);
+		}
+	}
+
+	// Cancel search in item list view (going back to item details)
+
+	.search-cancel.search-results.view-item-details-active & {
+		@include bp-only(sm) {
+			display: none; // Hack: ideally we would keep showing the search results in this state
+		}
+
+		@include touch-and-bp-only(md) {
+			display: none; // Hack: ideally we would keep showing the search results in this state
+		}
+	}
+}

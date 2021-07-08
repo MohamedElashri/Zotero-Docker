@@ -1,0 +1,227 @@
+//
+// Item details
+// --------------------------------------------------
+
+.item-details {
+	display: flex;
+	flex-direction: column;
+	background: $item-details-bg;
+	overflow: hidden;
+
+	@include bp-down(sm) {
+		@include same(right, bottom, left, 0);
+		top: $touch-header-height;
+		position: absolute;
+		transform: translate3d(100%, 0, 0);
+		transition: transform $nav-transition;
+	}
+
+	@include touch-and-bp-only(md) {
+		@include same(right, bottom, left, 0);
+		top: $touch-header-height;
+		position: absolute;
+		transform: translate3d(100%, 0, 0);
+		transition: transform $nav-transition;
+	}
+
+	.view-item-details-active & {
+		@include bp-down(sm) {
+			transform: translate3d(0, 0, 0);
+		}
+
+		@include touch-and-bp-only(md) {
+			transform: translate3d(0, 0, 0);
+		}
+	}
+
+	.touch-tag-selector-active & {
+		@include bp-down(sm) {
+			bottom: -$touch-footer-height;
+		}
+
+		@include touch-and-bp-only(md) {
+			bottom: -$touch-footer-height;
+		}
+	}
+
+	@include bp-down(xs) {
+		top: 0;
+
+		.view-item-details-active & {
+			transform: translate3d(25%, 0, 0);
+		}
+
+		// Start searching in item details view
+
+		// Init
+
+		.search-active.view-item-details-active & {
+			transform: translate3d(0, 0, 0);
+			transition: none;
+		}
+
+		// Search results
+
+		.search-results.search-init.view-item-list-active & {
+			transform: translate3d(100%, 0, 0);
+			opacity: 0;
+			transition: opacity $fade-transition, transform $fade-transition $fade-transition-duration;
+		}
+
+		// Cancel search
+
+		.search-cancel.search-active.view-item-details-active & {
+			transform: translate3d(0, 0, 0);
+			transition: none;
+		}
+
+		@keyframes fade-in-item-details {
+			100% {
+				opacity: 1;
+			}
+		}
+
+		.search-cancel.search-results.view-item-details-active & {
+			transform: translate3d(0, 0, 0);
+			opacity: 0;
+			transition: none;
+			animation: fade-in-item-details $fade-transition-duration ease-in-out forwards; // We need an animation here to ensure that opacity is 0 at the start.
+		}
+	}
+
+	@include tablet {
+
+		// Start searching in item details view
+
+		// Search results
+
+		@include state(".search-results.view-item-list-active .item-details") {
+			transform: translate3d(100%, 0, 0);
+			opacity: 0;
+			transition: transform $nav-transition, opacity 0s linear $nav-transition-duration;
+		}
+
+		@include state(".search-results.search-init.view-item-list-active .item-details") {
+			transform: translate3d(100%, 0, 0);
+			opacity: 0;
+			transition: opacity $fade-transition, transform $fade-transition $fade-transition-duration;
+		}
+
+		// Cancel search in item details view (going back to item list view)
+
+		@include state(".search-cancel.view-item-list-active .item-details") {
+			transform: translate3d(100%, 0, 0);
+			opacity: 0;
+			transition: opacity ($fade-transition-duration - 0.1) ease-in-out, transform 0s linear ($fade-transition-duration - 0.1); // Must be a bit faster than JS class change
+
+			.info-view {
+				display: none; // Hack: ideally we would keep showing the item details of a search result
+			}
+		}
+
+		// Cancel search in item list view (going back to item details view)
+		// Used for either .search-init or .search-results set
+		@include state(".search-cancel.view-item-details-active .item-details") {
+			transform: translate3d(0, 0, 0);
+			opacity: 1;
+			transition: opacity $fade-transition;
+		}
+	}
+
+	@include mouse-and-bp-only(md) {
+		flex: 0 0 50%;
+		padding-top: $border-width;
+	}
+
+	@include mouse-and-bp-only(md) {
+		padding-top: 0;
+		box-shadow: 0 -1px rgba(#000, 0.1);
+		position: relative; // Above odd rows
+	}
+
+	@include bp-up-normalized(lg) {
+		flex: 0 0 $item-details-width-lg;
+		min-width: 0; // Fix truncation
+	}
+
+	@include touch-and-bp-only(lg) {
+		@include hairline(left, $item-details-border);
+		flex: 0 0 $item-details-width-lg-touch;
+	}
+
+	@include mouse-and-bp-only(lg) {
+		border-left: $border-width solid tint($item-details-border, 50%);
+	}
+
+	.panel {
+		transition: transform $nav-transition;
+
+		.view-note-active & {
+			@include bp-down(sm) {
+				transform: translate3d(-25%, 0, 0);
+			}
+
+			@include touch-and-bp-up(md) {
+				transform: translate3d(-25%, 0, 0);
+			}
+		}
+	}
+
+	.panel-header {
+		@include touch-or-bp-down(sm) {
+			display: none;
+		}
+
+		.btn-edit {
+			position: absolute;
+			right: 0;
+			top: 0;
+			height: calc(100% - #{$border-width});
+			padding: 0 $default-padding-x-touch;
+
+			&:focus {
+				.keyboard & {
+					outline: $outline-width solid $focus-color;
+					outline-offset: -$outline-width;
+				}
+			}
+		}
+	}
+
+	//.toolbar {
+	//	margin: $space-min 0 ($space-md - 2px);
+	//}
+
+	// Two column layout for md screens
+	@include mouse-and-bp-only(md) {
+
+		// Optimize tabs layout
+		.tabs.compact {
+			li {
+				a {
+					padding: 0 $default-padding-x-touch;
+				}
+			}
+		}
+
+		// 2 columns layout
+		.row {
+			display: flex;
+		}
+
+		.col {
+			flex: 0 0 50%;
+			position: relative;
+			min-width: 0; // Fix truncation
+		}
+	}
+
+	.info-view {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 100%;
+		font-size: $info-view-font-size;
+		color: $info-view-color;
+	}
+}

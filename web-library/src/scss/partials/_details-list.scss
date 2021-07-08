@@ -1,0 +1,143 @@
+//
+// Details list
+// --------------------------------------------------
+
+.details-list {
+	@include mouse-and-bp-up(md) {
+		margin-bottom: $space-xs;
+	}
+
+	li {
+		display: flex;
+		align-items: center;
+
+		@include touch-or-bp-down(sm) {
+			height: $line-height-large-touch + $border-width;
+			padding: $border-width $default-padding-x-touch 0;
+			@include hairline(top, $details-list-border-color, $start: (2 * $default-padding-x-touch + 28px));
+		}
+
+		@include mouse-and-bp-up(md) {
+			height: $line-height-large;
+			padding: 0 $default-padding-x;
+		}
+
+		&:first-child {
+			@include touch-or-bp-down(sm) {
+				@include hairline-disabled(top);
+				padding-top: 0;
+			}
+		}
+
+		&.selected {
+			@include touch-or-bp-down(sm) {
+				background-color: $focus-color;
+				color: $shade-0;
+				@include hairline-disabled(top);
+
+				& + li {
+					padding-top: 0;
+					border-top: $border-width solid $focus-color;
+					@include hairline-disabled(top);
+				}
+			}
+
+			@include mouse-and-bp-up(md) {
+				background-color: $details-list-selected-bg;
+			}
+		}
+
+		&:focus {
+			outline: none;
+
+			@include mouse-and-bp-up(md) {
+				color: $details-list-focus-color;
+				background-color: $details-list-focus-bg;
+			}
+		}
+
+		.icon {
+			@include state("li.selected") {
+				@include touch-or-bp-down(sm) {
+					color: $details-list-focus-color;
+				}
+			}
+
+			@include state("li:focus") {
+				color: $details-list-focus-color;
+			}
+		}
+
+		> .icon {
+			&:first-of-type {
+				@include touch-or-bp-down(sm) {
+					margin-right: $default-padding-x-touch;
+				}
+
+				@include mouse-and-bp-up(md) {
+					margin-right: $space-xs;
+				}
+			}
+		}
+
+		> .btn {
+			flex: 0 0 auto;
+
+			@include mouse-and-bp-up(md) {
+				padding: 0;
+				border: 0;
+
+				@include state("li:not(:focus-within)") {
+					opacity: 0.01;
+				}
+
+				@include state("li:hover", "li:focus-within") {
+					opacity: 1;
+				}
+
+				&:not(:last-child) {
+					margin-right: 6px; // Like 8px for 14px icons
+				}
+			}
+
+			@include mouse-keyboard-and-bp-up(md) {
+				&:focus {
+					box-shadow: none;
+					border-color: transparent;
+					outline: $outline-width solid $focus-color;
+				}
+			}
+
+			&.btn-circle {
+				margin-left: 2px;
+				margin-right: $default-padding-x-touch + 2px;
+			}
+		}
+
+		.truncate,
+		a {
+			margin-right: $space-xs;
+		}
+
+		.truncate {
+			flex: 1 1 auto;
+		}
+
+		a {
+			flex: 1 1 auto;
+			color: $details-list-link-color;
+			@include text-truncate;
+		}
+
+		.editable {
+			margin-right: 6px; // Optical $space-xs
+		}
+
+		.icon-minus-circle-strong {
+			@include touch-or-bp-down(sm) {
+				color: $btn-primary-color;
+			}
+		}
+	}
+}
+

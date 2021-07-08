@@ -1,0 +1,132 @@
+//
+// Touch Tag selector
+// --------------------------------------------------
+
+.touch-tag-selector {
+	display: flex;
+	flex-direction: column;
+	@include hairline(right, $touch-tag-selector-border-color);
+	position: absolute; // Override position relative from hairline mixin
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: $z-index-touch-tag-selector;
+	background-color: $touch-tag-selector-pane-bg;
+
+	@include bp-down(xs) {
+		@include hairline-disabled(right);
+		top: -$touch-header-height - $navbar-height-xs;
+	}
+
+	.touch-header {
+		@include bp-down(xs) {
+			@include hairline-disabled(top);
+			padding-top: 0;
+			height: $line-height-large-touch + $border-width;
+		}
+	}
+
+	.filter-container {
+		flex: 0 0 auto;
+		display: flex;
+		align-items: center;
+		height: $line-height-large-touch + $border-width;
+		padding: 0 $space-min $border-width;
+		@include hairline(bottom, $touch-tag-selector-border-color);
+	}
+
+	.tag {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		height: $line-height-large-touch + $border-width;
+		padding: $border-width $default-padding-x-touch 0;
+		@include hairline(
+			top,
+			$touch-tag-selector-border-color,
+			$start: (2 * $default-padding-x-touch + $space-md)
+		);
+
+		&:first-child {
+			@include hairline-disabled(top);
+		}
+
+		.truncate {
+			flex: 1 1 0;
+		}
+	}
+
+	.tag-color {
+		flex: 0 0 auto;
+		width: $space-md;
+		height: $space-md;
+		border-radius: 50%;
+		border: $border-width solid $tag-color-border-color;
+		margin-right: $default-padding-x-touch;
+
+		&[style*="color"] {
+			background-color: currentColor;
+			border: $border-width solid rgba($shade-10, 0.08);
+		}
+	}
+
+	.selected-tags {
+		background-color: $touch-tag-selected-bg;
+
+		.tag {
+			&::before,
+			.tag-color:not([style*="color"]) {
+				mix-blend-mode: multiply;
+			}
+
+			.btn-circle {
+				flex: 0 0 auto;
+				margin-left: $default-padding-x-touch;
+			}
+		}
+	}
+
+	.tag-selector-list {
+		position: relative; // Needed for last child hairline hack
+		z-index: 0; // …
+
+		.tag {
+			// Use box shadow once Safari is able to render 0.5px box-shadow
+			&:last-child {
+				background-color: $touch-tag-selector-pane-bg;
+				position: relative;
+
+				&::after {
+					content: "";
+					position: absolute;
+					z-index: -1;
+					right: 0;
+					bottom: 0;
+					left:  2 * $default-padding-x-touch + $space-md;
+					height: 1px;
+					box-shadow: 0 1px mix($touch-tag-selector-border-color, $body-bg, 50%);
+
+					@media (min-resolution: 2dppx) {
+						box-shadow: 0 1px $touch-tag-selector-border-color;
+						transform: translateY(-0.5px);
+					}
+				}
+			}
+
+			.truncate {
+				@include state(".tag.placeholder") {
+					flex: 0 0 calc(70% - 32px);
+					margin-right: auto;
+					height: $space-sm;
+					border-radius: $space-sm / 2;
+					background-color: $touch-tag-placeholder-bg;
+
+					@include variant(".tag.odd") {
+						flex: 0 0 calc(85% - 32px);
+					}
+				}
+			}
+		}
+	}
+}

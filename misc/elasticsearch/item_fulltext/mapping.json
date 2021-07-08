@@ -1,0 +1,19 @@
+{
+	"item_fulltext": {
+		"_source": {
+			"enabled": false
+		},
+		"properties": {
+			"libraryID": {
+				"type": "integer"
+			},
+			"content": {
+				"type": "text"
+			}
+		},
+		"_routing": {
+			"required": true
+		},
+		"dynamic": false
+	}
+}

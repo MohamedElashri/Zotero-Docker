@@ -1,0 +1,248 @@
+//
+// Item list
+// --------------------------------------------------
+
+.items-list-wrap {
+	flex: 1 1 auto;
+	flex-direction: column;
+
+	.loading & {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+}
+
+.items-list {
+	display: flex;
+	flex-direction: column;
+
+	> div {
+		flex: 0 0 auto;
+	}
+
+	.item {
+		// Items in the list are fixed at 61px height
+		display: flex;
+		padding: $item-list-padding-top $item-list-padding-x $item-list-padding-bottom;
+		position: relative;
+		@include hairline(top, $item-border-color, $start: (2 * $item-list-padding-x + 28px));
+
+		@include bp-down(xs) {
+			@include hairline(top, $item-border-color, $start: $item-list-padding-x);
+		}
+
+		@include state(".items-list:not(.editing)") {
+			padding-right: $item-list-padding-right;
+
+			&.active {
+				color: $item-active-color;
+				background-color: $item-active-bg;
+				@include hairline-disabled(top);
+
+				& + .item {
+					@include hairline-disabled(top);
+				}
+			}
+		}
+
+		@include state(".items-list.editing") {
+			padding-left: 2 * $item-list-padding-x + $space-lg;
+			padding-right: $item-list-padding-x;
+			@include hairline(top, $item-border-color, $start: (3 * $item-list-padding-x + $space-lg + 28px));
+
+			@include bp-down(xs) {
+				@include hairline(top, $item-border-color, $start: (2 * $item-list-padding-x + $space-lg));
+			}
+		}
+
+		&:focus {
+			.keyboard & {
+				outline-offset: -$outline-width;
+				@include hairline-disabled(top);
+
+				&.active {
+					@include state(".items-list:not(.editing)") {
+						outline-color: $item-active-color;
+					}
+				}
+
+				& + .item {
+					@include state(".items-list:not(.editing)") {
+						@include hairline-disabled(top);
+					}
+				}
+			}
+		}
+
+		&:first-child {
+			@include hairline-disabled(top);
+
+			@include state(".items-list.editing") {
+				@include hairline-disabled(top);
+			}
+		}
+
+		&:last-child:not(.active):not(:focus) {
+			background-color: $body-bg;
+
+			// Use box shadow once Safari is able to render 0.5px box-shadow
+			&::after {
+				content: "";
+				position: absolute;
+				z-index: -1;
+				right: 0;
+				bottom: 0;
+				left: 2 * $item-list-padding-x + 28px;
+				height: 1px;
+				box-shadow: 0 1px mix($item-border-color, $body-bg, 50%);
+
+				@media (min-resolution: 2dppx) {
+					box-shadow: 0 1px $item-border-color;
+					transform: translateY(-0.5px);
+				}
+
+				@include bp-down(xs) {
+					left: $item-list-padding-x;
+				}
+
+				@include state(".items-list.editing") {
+					left: 3 * $item-list-padding-x + $space-lg + 28px;
+
+					@include bp-down(xs) {
+						left: 2 * $item-list-padding-x + 28px;
+					}
+				}
+			}
+		}
+
+		input[type="checkbox"] {
+			position: absolute;
+			left: $item-list-padding-x;
+			top: ($item-list-row-height - $border-width - $space-lg) / 2 + $border-width;
+			pointer-events: none; // These are purely decorative
+		}
+
+		.item-type {
+			flex: 0 0 auto;
+			align-self: center;
+			margin-right: $item-list-padding-x;
+		}
+
+		.metadata {
+			@include text-truncate;
+			position: relative;
+
+			@include state(".item.placeholder") {
+				height: 12px;
+				border-radius: 6px;
+				background-color: $item-placeholder-color;
+			}
+		}
+
+		.title {
+			height: floor($font-size-mobile * $line-height-base); // Keep second line at the bottom
+
+			@include state(".item.placeholder") {
+				width: 80%;
+				margin-top: 6px;
+
+				@include variant(".item.odd") {
+					width: 90%;
+				}
+			}
+		}
+
+		.creator-year {
+			display: flex;
+			color: $item-creator-date-color;
+
+			@include state(".item.placeholder") {
+				width: 60%;
+				margin-top: 12px;
+				background-color: $creator-date-placeholder-color;
+
+				@include variant(".item.odd") {
+					width: 70%;
+				}
+			}
+
+			.creator,
+			.year {
+				@include text-truncate;
+
+				@include state(".items-list:not(.editing) .item.active") {
+					color: $item-active-color;
+					opacity: 0.67;
+				}
+			}
+
+			.creator {
+				flex: 0 1 auto;
+			}
+
+			.year {
+				flex: 0 0 auto;
+
+				&:not(:empty) {
+					&::before {
+						content: "(";
+						white-space: pre;
+					}
+
+					&::after {
+						content: ")";
+					}
+				}
+			}
+
+			.creator:not(:empty) + .year:not(:empty) {
+				&::before {
+					content: " (";
+					white-space: pre;
+				}
+			}
+
+			.icons {
+				flex: 0 0 auto;
+				margin-left: auto;
+				display: flex;
+				align-items: center;
+				padding-left: $space-xs;
+
+				@include state(".icons:empty", ".item.placeholder") {
+					display: none;
+				}
+
+				.icon {
+					color: $item-creator-date-color;
+				}
+
+				.icon-attachment,
+				.icon-note-sm {
+					margin-right: $space-min;
+
+					@include state(".items-list:not(.editing) .item.active") {
+						color: $item-active-color;
+					}
+				}
+			}
+		}
+
+		.icon-chevron-13 {
+			position: absolute;
+			right: 12px;
+			top: ($item-list-row-height - $border-width - $space-md) / 2 + $border-width;
+			transform: rotate(90deg);
+			color: $item-list-chevron-color;
+
+			@include state(".item.active") {
+				color: $item-active-color;
+			}
+
+			@include state(".items-list.editing") {
+				display: none;
+			}
+		}
+	}
+}

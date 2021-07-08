@@ -1,0 +1,358 @@
+//
+// Creators entry
+// --------------------------------------------------
+
+// Creators field
+.creators-entry {
+	position: relative;
+
+	@include state(".panel.editing .creators-entry") {
+		@include touch-or-bp-down(sm) {
+			$handle-width: 2 * $default-padding-x-touch + $space-lg + $input-border-width;
+
+			padding-left: 2 * $default-padding-x-touch + $space-lg;
+			padding-right: $handle-width;
+			background: image-url("icons/chevron-13.svg") no-repeat right ($handle-width + 4px) center $input-bg;
+
+			&.single,
+			&.virtual {
+				padding-right: 0;
+				background-position: right 12px center; // 16px
+			}
+
+			&::before {
+				left: 2 * $default-padding-x-touch + $space-lg;
+			}
+		}
+
+		@include variant(".title + .creators-entry") {
+			@include bp-up-normalized(sm) {
+				padding-top: 0;
+				border-top-left-radius: $input-border-radius;
+				border-top-right-radius: $input-border-radius;
+			}
+
+			&::before {
+				@include bp-down-normalized(xs) {
+					left: 0;
+				}
+
+				@include bp-up-normalized(sm) {
+					content: none;
+				}
+			}
+		}
+
+		// Creators focus state
+		&:focus {
+			.keyboard:not(.specifity) & {
+				outline: none;
+				z-index: 2;
+
+				&::before,
+				&::after {
+					content: "";
+					position: absolute;
+					left: 0;
+					right: 0;
+					height: $outline-width;
+					background-color: $focus-color;
+				}
+
+				&::before {
+					top: auto;
+					bottom: calc(100% - #{$input-border-width});
+				}
+
+				&::after {
+					top: 100%;
+				}
+			}
+		}
+	}
+
+	.key {
+		@include touch-or-bp-down(sm) {
+			@include state(".editing .creators-entry.virtual") {
+				flex-basis: calc((100% - #{2 * $default-padding-x-touch
+					+ $input-border-width + $space-lg}) * #{$metadata-list-offset / 100%}
+				); // Align with creators
+			}
+		}
+
+		@include mouse-and-bp-up(md) {
+			justify-content: flex-end;
+
+			.input-group {
+				flex: 0 0 auto;
+				max-width: 100%;
+			}
+
+			.select-component {
+				padding: 0;
+				border: none;
+				background-color: transparent;
+				line-height: normal;
+				color: $key-color;
+				user-select: none; // Reset
+				box-shadow: none;
+
+				.select-control {
+					justify-content: flex-end;
+					background-color: transparent;
+					border: none;
+					padding: 0;
+					box-shadow: none;
+
+					@include state(".select-component:hover", ".select-component.is-focused") {
+						@include state(".select-component:not(.is-disabled)") {
+							cursor: pointer;
+							color: $link-color;
+						}
+					}
+				}
+
+				.select-multi-value-wrapper {
+					flex: 0 0 auto;
+					max-width: 100%;
+				}
+
+				.select-value {
+					flex: 0 0 auto;
+					position: static;
+					padding: 0;
+					max-width: 100%;
+				}
+
+				.select-input {
+					position: absolute;
+				}
+
+				.select-arrow-container {
+					order: -1;
+				}
+
+				.select-arrow {
+					background-image: image-url("icons/chevron-7-777.svg");
+					display: none;
+
+					@include state(".creators-entry:hover") {
+						@include state(".select-component:not(.is-disabled)") {
+							display: block;
+						}
+					}
+
+					@include state(".select-component:hover") {
+						background-image: image-url("icons/chevron-7-secondary.svg");
+					}
+
+					@include state(".select-component.is-focused") {
+						display: block;
+						background-image: image-url("icons/chevron-7-secondary.svg");
+					}
+				}
+
+				.select-menu-outer {
+					text-align: left;
+					width: auto;
+					white-space: nowrap;
+					right: auto;
+				}
+			}
+		}
+	}
+
+	.value {
+		@include touch-or-bp-down(sm) {
+			@include state(".editing .creators-entry") {
+				align-items: center;
+				padding-right: $creators-value-padding-right-touch;
+			}
+
+			@include state(".editing .creators-entry.single, .editing .creators-entry.virtual") {
+				padding-right: $creators-value-padding-right-touch + $space-xs;
+			}
+
+			@include state(".creators-entry.virtual") {
+				color: $placeholder-color;
+			}
+		}
+
+		@include mouse-and-bp-up(md) {
+			> *:not(:first-child) {
+				margin-left: 2px;
+			}
+
+			> *:not(:last-child) {
+				margin-right: 2px;
+			}
+
+			.editable {
+				flex: 1 1 0;
+
+				::placeholder {
+					color: transparent; // Hide
+				}
+
+				&:first-child {
+					@include state(".creators-entry.creators-twoslot") {
+						display: flex;
+						flex: 0 1 auto;
+						max-width: calc(#{$creators-last-name-max-width} - 30px); // Substract buttons and margins / 2
+
+						&::after {
+							content: ",";
+							flex: 0 0 auto;
+						}
+
+						.editable-content {
+							position: relative;
+							z-index: 1; // Higher than comma
+						}
+
+						.input-group {
+							flex: 1 1 auto;
+						}
+					}
+				}
+
+				&:last-of-type {
+					margin-right: 6px; // 8px
+				}
+			}
+		}
+
+		.btn {
+			padding: 0;
+			border: none;
+			width: $space-md;
+			height: $space-md;
+			flex: 0 0 auto;
+
+			@include touch-or-bp-down(sm) {
+				display: none;
+			}
+
+			@include state(".creators-entry:not(:focus-within)") {
+				@include mouse-and-bp-up(md) {
+					visibility: hidden;
+				}
+			}
+
+			@include state(".creators-entry:hover", ".creators-entry:focus-within") {
+				@include mouse-and-bp-up(md) { // Repeat for specifity
+					visibility: visible;
+				}
+			}
+
+			&:focus {
+				@include touch-or-bp-down(sm) {
+					outline: none;
+					box-shadow: 0 0 0 2px $red;
+				}
+
+				@include mouse-keyboard-and-bp-up(md) {
+					box-shadow: none;
+					outline: $outline-width solid $focus-color;
+				}
+			}
+
+			.icon {
+				display: none;
+			}
+		}
+
+		.btn-single-dual {
+			width: 17px;
+			margin-left: $space-min + $input-btn-focus-width + $input-border-width;
+
+			@include state(".creators-entry.creators-twoslot") {
+				background: image-url("icons/input-single.svg") no-repeat center center;
+
+				&:active {
+					background-image: image-url("icons/input-single-active.svg");
+				}
+			}
+
+			@include state(".creators-entry.creators-oneslot") {
+				background: image-url("icons/input-dual.svg") no-repeat center center;
+
+				&:active {
+					background-image: image-url("icons/input-dual-active.svg");
+				}
+			}
+		}
+
+		.btn-minus {
+			width: 14px;
+			background: image-url("icons/minus-circle.svg") no-repeat center center;
+
+			@include touch-or-bp-down(sm) {
+				@include state(".editing .creators-entry") {
+					display: block;
+					position: absolute;
+					left: $default-padding-x-touch;
+					top: ($line-height-large-touch - $space-lg) / 2;
+					margin-right: $default-padding-x-touch;
+					width: $space-lg;
+					height: $space-lg;
+					background: image-url("icons/24/minus-circle-strong.svg") no-repeat center center;
+					border: 1px solid $red;
+					border-radius: 50%;
+				}
+			}
+
+			&:active {
+				background-image: image-url("icons/minus-circle-active.svg");
+			}
+		}
+
+		.btn-plus {
+			width: 14px;
+			background: image-url("icons/plus-circle.svg") no-repeat center center;
+
+			&:active {
+				background-image: image-url("icons/plus-circle-active.svg");
+			}
+		}
+	}
+
+	.handle {
+		cursor: move;
+		display: none;
+
+		@include touch-or-bp-down(sm) {
+			align-self: stretch;
+			align-items: center;
+			flex: 0 0 auto;
+			padding: 0 $default-padding-x-touch;
+			border-left: 1px solid $input-border-color;
+			margin-right: -(2 * $default-padding-x-touch + $space-lg + $input-border-width);
+			touch-action: manipulation;
+
+			@include state(".editing .creators-entry") {
+				display: flex;
+			}
+
+			.icon-grip {
+				color: $handle-color-touch;
+			}
+		}
+
+		@include mouse-and-bp-up(md) {
+			align-items: center;
+			position: absolute;
+			left: 0;
+			top: 0;
+			height: 100%;
+
+			@include state(".metadata-list:not(.dnd-in-progress) .creators-entry:hover") {
+				display: flex;
+			}
+
+			.icon-grip {
+				color: $handle-color-mouse;
+			}
+		}
+	}
+}

@@ -1,0 +1,30 @@
+//
+// Searchbar
+// --------------------------------------------------
+
+.searchbar {
+	@include hairline(top, $touch-header-border);
+	@include hairline(bottom, $touch-header-border);
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	display: flex;
+	align-items: center;
+	padding: 0 $default-padding-x-touch;
+	background: #f5f5f5;
+	z-index: $z-index-search-bar;
+
+	.input-group.search {
+		margin: 0 $default-padding-x-touch 0 (-$default-padding-x-touch + $space-min);
+		position: relative;
+
+		.form-control {
+			@include bp-down-normalized(xs) {
+				padding-left: 38px;
+			}
+		}
+	}
+}
+

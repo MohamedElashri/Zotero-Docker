@@ -1,0 +1,41 @@
+# If on a testing site, deny by default unless IP is allowed
+SetEnvIf Host "apidev" ACCESS_CONTROL
+SetEnvIf Host "syncdev" ACCESS_CONTROL
+#######                   Local
+SetEnvIf X-Forwarded-For "192.168.1.|" !ACCESS_CONTROL
+order deny,allow
+deny from env=ACCESS_CONTROL
+
+php_value include_path "../include"
+php_value auto_prepend_file "header.inc.php"
+php_value auto_append_file "footer.inc.php"
+
+php_value memory_limit 500M
+
+#php_value xdebug.show_local_vars 1
+#php_value xdebug.profiler_enable 1
+#php_value xdebug.profiler_enable_trigger 1
+#php_value xdebug.profiler_output_dir /tmp/xdebug
+
+RewriteEngine On
+
+#
+# Serve pre-compressed schema file from zotero-schema submodule
+#
+# https://httpd.apache.org/docs/2.4/mod/mod_deflate.html#precompressed
+#
+RewriteCond "%{HTTP:Accept-Encoding}" "gzip"
+RewriteRule ^schema$ zotero-schema/schema.json.gz [QSA]
+# Serve correct content type, and prevent mod_deflate double gzip.
+RewriteRule ^zotero-schema/schema\.json.gz$ - [T=application/json,E=no-gzip:1]
+<Files schema.json.gz>
+  # Serve correct encoding type
+  Header append Content-Encoding gzip
+  # Force proxies to cache gzipped & non-gzipped schema file separately
+  Header append Vary Accept-Encoding
+</Files>
+
+# If file or directory doesn't exist, pass to director for MVC redirections
+RewriteCond %{SCRIPT_FILENAME} !-f
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteRule .* index.php [L]

@@ -1,0 +1,68 @@
+//
+// Auto resizer
+// --------------------------------------------------
+
+.auto-resizer {
+	flex: 0 0 auto;
+	margin-right: auto;
+	position: relative;
+	max-width: 100%;
+
+	// Textarea
+	&.vertical {
+		flex: 1 1 auto; // Full width
+	}
+
+	.content {
+		@include text-truncate;
+		color: transparent;
+		line-height: normal; // Todo: only when containing editables
+		min-width: $space-sm;
+
+		.textarea & {
+			white-space: pre-wrap;
+			word-wrap: break-word;
+
+			.editing & {
+				@include touch-or-bp-down(sm) {
+					padding: 0 $input-btn-padding-x-touch;
+				}
+			}
+
+			&::after {
+				content: "\200b"; // Permanently insert a zero-width character to expand textareas at newlines
+			}
+		}
+
+		@include variant(".auto-resizer.vertical") {
+			line-height: $line-height-base;
+
+			@include touch-or-bp-down(sm) {
+				min-height: round($auto-resizer-vertical-rows * $font-size-mobile * $line-height-base-mobile);
+			}
+
+			@include mouse-and-bp-up(md) {
+				min-height: round($auto-resizer-vertical-rows * $font-size-base * $line-height-base);
+
+				@include state(".busy .auto-resizer") {
+					min-height: auto;
+				}
+			}
+		}
+	}
+
+	:last-child {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+
+		@include variant(".auto-resizer.vertical") {
+			@include touch-or-bp-down(sm) {
+				min-height: 0;
+				height: 100%; // Address #196
+			}
+		}
+	}
+}

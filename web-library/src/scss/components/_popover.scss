@@ -1,0 +1,176 @@
+//
+// Popover
+// --------------------------------------------------
+
+// As reactstrap wraps the actual popover in two divs we need to make sure that
+// the div with 'will-change' and the opacity transition has a high enough
+// z-index. We also have to replicate Bootstrap’s fade logic.
+.popover-container {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: $z-index-popover;
+
+	&.fade {
+		transition: opacity 0.15s ease-in-out; // Popover timeout can’t be configured
+	}
+
+	&:not(.show) {
+		opacity: 0;
+	}
+}
+
+.popover {
+	position: absolute;
+	top: 0;
+	left: 0;
+	max-width: $popover-max-width;
+	font-size: $font-size-base;
+	word-wrap: break-word;
+	background-color: $popover-bg;
+	box-shadow: $popover-box-shadow;
+	border-radius: $popover-border-radius;
+
+	.arrow, // Remove when reactstrap switched to popover-arrow
+	.popover-arrow {
+		position: absolute;
+		display: block;
+		width: $popover-arrow-width;
+		height: $popover-arrow-height;
+		margin: 0 $popover-border-radius;
+
+		&::before,
+		&::after {
+			position: absolute;
+			display: block;
+			content: "";
+			border-color: transparent;
+			border-style: solid;
+		}
+	}
+}
+
+.bs-popover-top {
+	margin-bottom: $popover-arrow-height;
+
+	> .popover-arrow {
+		bottom: calc((#{$popover-arrow-height} + #{$popover-border-width}) * -1);
+
+		&::before {
+			bottom: 0;
+			border-width: $popover-arrow-height ($popover-arrow-width / 2) 0;
+			border-top-color: $popover-arrow-outer-color;
+		}
+
+		&::after {
+			bottom: $popover-border-width;
+			border-width: $popover-arrow-height ($popover-arrow-width / 2) 0;
+			border-top-color: $popover-arrow-color;
+		}
+	}
+}
+
+.bs-popover-right {
+	margin-left: $popover-arrow-height;
+
+	> .arrow,
+	> .popover-arrow {
+		left: calc((#{$popover-arrow-height} + #{$popover-border-width}) * -1);
+		width: $popover-arrow-height;
+		height: $popover-arrow-width;
+		margin: $popover-border-radius 0; // make sure the arrow does not touch the popover's rounded corners
+
+		&::before {
+			left: 0;
+			border-width: ($popover-arrow-width / 2) $popover-arrow-height ($popover-arrow-width / 2) 0;
+			border-right-color: $popover-arrow-outer-color;
+		}
+
+		&::after {
+			left: $popover-border-width;
+			border-width: ($popover-arrow-width / 2) $popover-arrow-height ($popover-arrow-width / 2) 0;
+			border-right-color: $popover-arrow-color;
+		}
+	}
+}
+
+.bs-popover-bottom {
+	margin-top: $popover-arrow-height;
+
+	> .arrow,
+	> .popover-arrow {
+		top: calc((#{$popover-arrow-height} + #{$popover-border-width}) * -1);
+
+		&::before {
+			top: 0;
+			border-width: 0 ($popover-arrow-width / 2) $popover-arrow-height ($popover-arrow-width / 2);
+			border-bottom-color: $popover-arrow-outer-color;
+		}
+
+		&::after {
+			top: $popover-border-width;
+			border-width: 0 ($popover-arrow-width / 2) $popover-arrow-height ($popover-arrow-width / 2);
+			border-bottom-color: $popover-arrow-color;
+		}
+	}
+}
+
+.bs-popover-left {
+	margin-right: $popover-arrow-height;
+
+	> .arrow,
+	> .popover-arrow {
+		right: calc((#{$popover-arrow-height} + #{$popover-border-width}) * -1);
+		width: $popover-arrow-height;
+		height: $popover-arrow-width;
+		margin: $popover-border-radius 0; // make sure the arrow does not touch the popover's rounded corners
+
+		&::before {
+			right: 0;
+			border-width: ($popover-arrow-width / 2) 0 ($popover-arrow-width / 2) $popover-arrow-height;
+			border-left-color: $popover-arrow-outer-color;
+		}
+
+		&::after {
+			right: $popover-border-width;
+			border-width: ($popover-arrow-width / 2) 0 ($popover-arrow-width / 2) $popover-arrow-height;
+			border-left-color: $popover-arrow-color;
+		}
+	}
+}
+
+.bs-popover-auto {
+  &[x-placement^="top"] {
+    @extend .bs-popover-top;
+  }
+  &[x-placement^="right"] {
+    @extend .bs-popover-right;
+  }
+  &[x-placement^="bottom"] {
+    @extend .bs-popover-bottom;
+  }
+  &[x-placement^="left"] {
+    @extend .bs-popover-left;
+  }
+}
+
+.popover-header {
+	padding: $popover-header-padding-y $popover-header-padding-x;
+	font-size: $popover-header-font-size;
+	color: $popover-header-color;
+	background-color: $popover-header-bg;
+	border-bottom: $popover-border-width solid $popover-header-border-color;
+	border-top-left-radius: $popover-border-radius;
+	border-top-right-radius: $popover-border-radius;
+
+	&:empty {
+		display: none;
+	}
+}
+
+.popover-body {
+	padding: $popover-body-padding-y $popover-body-padding-x;
+	color: $popover-body-color;
+}

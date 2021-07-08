@@ -1,0 +1,71 @@
+//
+// Drag layer
+// --------------------------------------------------
+
+.drag-layer {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: $z-index-drag-layer;
+	pointer-events: none;
+	touch-action: none;
+	overflow: hidden;
+}
+
+.creator-drag-preview {
+	$handle-width: 2 * $default-padding-x-touch + $space-lg;
+
+	display: flex;
+	align-items: center;
+	min-height: $line-height-large-touch;
+	padding-left: 2 * $default-padding-x-touch + $space-lg;
+	padding-right: 2 * $default-padding-x-touch + $space-lg + $input-border-width;
+	box-shadow: 0 2px 20px $creator-drag-preview-shadow;
+	background:
+		linear-gradient(
+			to left,
+			transparent,
+			transparent $handle-width,
+			$input-border-color $handle-width,
+			$input-border-color ($handle-width + $input-border-width),
+			transparent ($handle-width + $input-border-width)
+		),
+		image-url("icons/minus-circle-touch.svg")
+			no-repeat $default-padding-x-touch center,
+		image-url("icons/chevron-13.svg")
+			no-repeat right ($handle-width + 4px) center,
+		image-url("icons/grip.svg")
+			no-repeat right $default-padding-x-touch center $input-bg;
+
+	.creator-type {
+		flex: 0 0 calc(
+			#{$metadata-list-offset} - #{$metadata-list-gutter-mobile / 2}
+		);
+		color: $key-color;
+		margin-right: $metadata-list-gutter-mobile / 2;
+	}
+
+	.name {
+		padding-left: $metadata-list-gutter-mobile / 2;
+		padding-right: $creators-value-padding-right-touch;
+	}
+}
+
+.items-drag-indicator {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	height: $item-table-row-height;
+	color: $items-drag-indicator-color;
+	background-color: $items-drag-indicator-bg;
+	opacity: 0.8;
+	padding: 0 $space-sm;
+	border-radius: $item-table-row-height / 2;
+	transform: translate(-50%, -50%);
+
+	.icon {
+		margin-right: $space-xs;
+	}
+}

@@ -1,0 +1,323 @@
+//
+// Item table
+// --------------------------------------------------
+
+.items-table-wrap {
+	flex: 1 1 auto;
+	flex-direction: column;
+
+	&.reordering {
+		cursor: move; // IE
+		//cursor: grabbing; // Use when columns can be dragged
+	}
+
+	&.resizing {
+		cursor: ew-resize; // Needed when resizing is laggy
+	}
+
+	.icon-spin {
+		position: absolute;
+		left: calc(50% - #{$icon-spin-size-lg / 2});
+		top: calc(50% - #{$icon-spin-size-lg / 2} + #{$line-height-large / 2});
+	}
+
+	&.dnd-target {
+		@include dnd-target;
+
+		&::after {
+			pointer-events: none;
+			background-color: transparent;
+			outline: 3px solid tint($secondary, 75%);
+			outline-offset: -3px;
+		}
+	}
+}
+
+.items-table {
+	.items-table-head {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		border: {
+			top: $border-width solid $item-table-head-border;
+			bottom: $border-width solid $item-table-head-border;
+		}
+
+
+		.column-header {
+			display: flex;
+			height: $item-table-head-height;
+			text-align: left;
+			padding: 0 $space-min;
+			color: $item-table-head-color;
+			position: relative;
+			min-width: 0; // Fix truncation
+
+			&:active {
+				.items-table-wrap:not(.resizing) & {
+					background-color: $item-table-head-active-bg;
+				}
+			}
+
+			&:focus {
+				.keyboard & {
+					outline-offset: -$outline-width;
+				}
+			}
+
+			&::before {
+				content: "";
+				background: $item-table-head-border;
+				position: absolute;
+				top: 2px;
+				bottom: 2px;
+				left: 0;
+				width: $border-width;
+
+				@include state(".column-header:focus") {
+					.keyboard & {
+						content: none;
+					}
+				}
+			}
+
+			&::after {
+				content: "";
+				position: absolute;
+				top: 2px;
+				right: 0;
+				bottom: 2px;
+				width: $border-width;
+				box-shadow: $border-width 0 $item-table-head-border;
+			}
+
+			&:active {
+				.items-table-wrap:not(.resizing) & {
+					&::before {
+						top: 0;
+						bottom: 0;
+					}
+
+					& + div {
+						&::before {
+							top: 0;
+							bottom: 0;
+						}
+					}
+				}
+			}
+
+			&:first-child {
+				&::before {
+					content: none;
+				}
+			}
+
+			&:last-child {
+				&::after {
+					html:not(.scrollbar-style-permanent) & {
+						content: none;
+					}
+				}
+			}
+
+			.header-content {
+				flex: 1 1 auto;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 0 $space-min 0 ($space-min + $border-width);
+				min-width: 0; // Fix truncation
+
+				@include state(".column-header.reorder-source") {
+					opacity: 0.5;
+				}
+
+				@include variant(".column-header:first-child") {
+					padding-left: $space-sm - $space-min;
+				}
+
+				@include variant(".column-header:last-child") {
+					padding-right: $space-sm - $space-min;
+				}
+			}
+
+			.sort-indicator {
+				color: inherit;
+				margin: 0 -4px 0 -5px;
+			}
+
+			&[aria-sort="descending"] {
+				.sort-indicator {
+					transform: scaleY(-1);
+				}
+			}
+
+			.resize-handle {
+				position: absolute;
+				top: 2px;
+				bottom: 2px;
+				left: -$space-xs / 2;
+				width: $space-xs;
+				cursor: ew-resize;
+			}
+
+			.reorder-target {
+				position: absolute;
+				top: 2px;
+				bottom: 2px;
+				width: 3px;
+				background: $sort-indicator;
+				z-index: 2;
+
+				&.reorder-left {
+					left: -1px;
+				}
+
+				&.reorder-right {
+					right: -2px;
+				}
+			}
+		}
+	}
+
+	.items-table-body {
+		padding-top: $space-min / 2;
+	 	background-image: repeating-linear-gradient(to bottom, $item-table-odd-bg $space-min / 2,
+	 		$item-table-odd-bg ($item-table-row-height + $space-min / 2),
+	 		transparent ($item-table-row-height + $space-min / 2),
+	 		transparent (2 * $item-table-row-height + $space-min / 2));
+	 	background-attachment: local;
+
+
+	 	> div {
+		 	position: relative;
+	 	}
+	}
+
+	.item {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		user-select: none;
+		width: 100%;
+
+		&.active {
+			background-color: $item-table-active-bg;
+
+			&.focused {
+				color: $item-table-focus-color;
+				background-color: $item-table-focus-bg;
+			}
+		}
+
+		&:focus {
+			.keyboard & {
+				outline: none;
+			}
+		}
+
+		&.dnd-target {
+			@include dnd-target;
+		}
+
+		&.dnd-target-top, &.dnd-target-bottom + .item {
+			overflow: visible !important;
+
+			&::before {
+				content: "";
+				background: $item-table-dnd-target-bg;
+				position: absolute;
+				top: -1px;
+				width: 80px;
+				left: 10px;
+				height: 2px;
+			}
+		}
+
+		.placeholder-icon {
+			width: $space-md;
+			height: $space-md;
+			margin-right: $space-xs;
+			background: $item-placeholder-color;
+			border-radius: 4.5px;
+		}
+
+		.placeholder {
+			margin-top: 1px;
+			height: 9px;
+			width: 70%;
+			background: $item-placeholder-color;
+			border-radius: 4.5px;
+
+			@include variant(".metadata:nth-child(even) .placeholder") {
+				width: 80%;
+			}
+
+			@include variant(".item.odd") {
+				width: 90%;
+
+				@include variant(".metadata:nth-child(even) .placeholder") {
+					width: 70%;
+				}
+			}
+
+			@include variant(".item.nth-4n-1") {
+				width: 80%;
+
+				@include variant(".metadata:nth-child(even) .placeholder") {
+					width: 60%;
+				}
+			}
+
+			@include variant(".item.nth-4n") {
+				width: 60%;
+
+				@include variant(".metadata:nth-child(even) .placeholder") {
+					width: 90%;
+				}
+			}
+		}
+	}
+
+	.metadata {
+		display: flex;
+		align-items: center;
+		height: $item-table-row-height;
+		padding: 0 $space-xs 0 ($space-xs + $border-width);
+
+		&:first-child {
+			padding-left: $default-padding-x;
+		}
+
+		&:last-child {
+			padding-right: $default-padding-x;
+		}
+
+		&.title {
+			> .icon {
+				margin-right: $space-xs;
+			}
+
+			.truncate {
+				flex: 1 10000 auto; // Shrink before tag-colors
+			}
+
+			.tag-colors {
+				flex: 0 1 auto;
+				display: flex;
+				padding-left: $space-xs;
+				margin-left: auto; // space-between on .metadata breaks placeholders
+				overflow: hidden;
+				min-width: 0;
+			}
+		}
+	}
+}
+
+.column-selector {
+	.tick {
+		display: inline-block;
+		width: $space-md;
+	}
+}

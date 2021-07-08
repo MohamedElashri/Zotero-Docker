@@ -1,0 +1,69 @@
+//
+// Sidebar
+// --------------------------------------------------
+
+.sidebar {
+	display: flex;
+	flex-direction: column;
+	background: $sidebar-bg;
+	overflow: hidden;
+	position: relative;
+	min-height: 0;
+
+	@include touch-or-bp-down(sm) {
+		@include hairline(right, $sidebar-border-color);
+	}
+
+	@include bp-down-normalized(xs) {
+		position: absolute;
+		top: $touch-header-height;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		@include hairline-disabled(right);
+		overflow: visible; // Allow touch-tag-selector to overflow
+	}
+
+	@include mouse-and-bp-up(md) {
+		border-right: $border-width solid tint($sidebar-border-color, 50%);
+	}
+
+	@include bp-up(sm) {
+		flex: 0 0 $sidebar-width-sm;
+	}
+
+	@include bp-up(md) {
+		flex: 0 0 $sidebar-width-md;
+
+		.touch & {
+			flex: 0 0 $sidebar-width-md-touch;
+		}
+	}
+
+	@include bp-up(lg) {
+		flex: 0 0 $sidebar-width-lg;
+
+		.touch & {
+			flex: 0 0 $sidebar-width-lg-touch;
+		}
+	}
+
+	.touch-footer {
+		@include bp-down(xs) {
+			position: absolute;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			z-index: $z-index-touch-side-footer;
+			transition: transform $nav-transition;
+
+			.touch-tag-selector-active.view-item-details-active & {
+				transform: translate3d(-25%, 0, 0);
+			}
+		}
+
+		.btn {
+			margin-left: -7px; // Center with collection icons
+		}
+	}
+}

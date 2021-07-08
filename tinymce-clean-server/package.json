@@ -1,0 +1,20 @@
+{
+  "name": "tinymce-clean-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "author": "",
+  "license": "AGPL",
+  "dependencies": {
+    "koa": "^1.2.4",
+    "koa-body": "^1.6.0",
+    "koa-logger2": "0.0.1",
+    "tinymce.html": "4.5.2"
+  },
+  "devDependencies": {
+    "mocha": "^3.2.0"
+  }
+}

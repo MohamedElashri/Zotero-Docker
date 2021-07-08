@@ -1,0 +1,8 @@
+{
+	"logLevel": "trace",
+	"httpPort": 18050,
+	"redis": {
+		"prefix": ""
+	},
+	"continuedDelayDefault": 0
+}
