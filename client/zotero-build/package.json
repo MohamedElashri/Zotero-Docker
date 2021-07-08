@@ -1,0 +1,22 @@
+{
+  "name": "zotero-build",
+  "version": "1.0.0",
+  "description": "Zotero client build scripts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zotero/zotero-build.git"
+  },
+  "author": "",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/zotero/zotero-build/issues"
+  },
+  "homepage": "https://github.com/zotero/zotero-build#readme",
+  "dependencies": {
+    "sqlite": "^3.0.3"
+  }
+}

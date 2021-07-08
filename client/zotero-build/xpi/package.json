@@ -1,0 +1,11 @@
+{
+  "name": "zotero-xpi-build",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "jpm": "~1.2.2",
+    "jsonwebtoken": "~7.2.1"
+  },
+  "devDependencies": {}
+}

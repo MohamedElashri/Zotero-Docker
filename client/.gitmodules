@@ -1,0 +1,9 @@
+[submodule "zotero-standalone-build"]
+	path = zotero-standalone-build
+	url = git@github.com:zotero/zotero-standalone-build.git
+[submodule "zotero-build"]
+	path = zotero-build
+	url = git@github.com:zotero/zotero-build.git
+[submodule "zotero-client"]
+	path = zotero-client
+	url = git@github.com:zotero/zotero.git

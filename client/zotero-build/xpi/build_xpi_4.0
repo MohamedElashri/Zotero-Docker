@@ -1,0 +1,242 @@
+#!/bin/bash -e
+if [ -z $1 ]; then
+	echo "Usage: build_xpi branch [channel='release'] [xpisuffix='build'] [rdfsuffix=''] [xpidir=''] [buildsuffix='build']"
+	echo
+	echo "Example: build_xpi 4.0 release 4.0.1"
+	echo "    - Builds zotero-build.xpi and update-build.rdf in ./build"
+	echo "    - Points install.rdf to zotero.org/download/update.rdf"
+	echo "    - Points update-build.rdf to zotero.org/download/zotero-4.0.1.xpi"
+	echo
+	echo "Example: build_xpi 4.0 beta 4.0-beta"
+	echo "    - Builds zotero-build.xpi and update-build.rdf in ./build"
+	echo "    - Points install.rdf to zotero.org/download/update-beta.rdf"
+	echo "    - Points update-build.rdf to zotero.org/download/zotero-4.0b2.xpi"
+	echo
+	exit
+fi
+
+URL="https://github.com/zotero/zotero"
+
+ROOTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+BUILDDIR="$ROOTDIR/build"
+BRANCH="$1" # e.g. "3.0", defaults to "master"; can also be local directory
+CHANNEL="$2" # e.g, "beta", defaults to "release", which strips the revision number and build info
+XPISUFFIX="$3" # suffix of XPI to reference in update.rdf, defaults to "build"
+RDFSUFFIX="$4" # suffix of update RDF file to reference in install.rdf, leave blank to leave as "update.rdf"
+XPIDIR="$5" # extra directory to point to when referencing the XPI and update RDF, defaults to blank (i.e. zotero.org/download/update*.rdf)
+BUILDSUFFIX="$6" # defaults to "build"
+
+if [ -z "$CHANNEL" ]; then CHANNEL="release"; fi
+if [ -n "$XPISUFFIX" ]; then XPISUFFIX="-$XPISUFFIX"; else XPISUFFIX="-build"; fi
+if [ -n "$RDFSUFFIX" ]; then RDFSUFFIX="-$RDFSUFFIX"; fi
+if [ -n "$BUILDSUFFIX" ]; then BUILDSUFFIX="-$BUILDSUFFIX"; else BUILDSUFFIX="-build"; fi
+
+TEMPDIR=`mktemp -d`
+
+if [ ! -d "$BUILDDIR" ]; then
+	echo "$BUILDDIR is not a directory"
+	exit 1
+fi
+
+cd $BUILDDIR
+BUILDDIR="`pwd`"
+
+function cleanup {
+	rm -rf $TEMPDIR
+}
+trap cleanup EXIT
+
+if [ -d "$BRANCH" ]; then
+	REPO_DIR="$BRANCH"
+else
+	if [ ! -d zotero ]; then
+		git clone --recursive $URL zotero
+	fi
+	
+	cd zotero
+	REPO_DIR="`pwd`"
+	
+	if [ ! -f "$REPO_DIR/install.rdf" ]; then
+		echo "$REPO_DIR/install.rdf not found"
+		exit 1
+	fi
+	
+	git checkout $BRANCH
+	git pull
+	git submodule init
+	git submodule update
+	# Uncomment to ignore fixed submodule versions and always pull latest versions
+	#git submodule foreach git pull origin master
+fi
+
+VERSION=`perl -ne 'print and last if s/.*<em:version>(.*)\.SOURCE<\/em:version>.*/\1/;' "$REPO_DIR/install.rdf"`
+if [ -z "$VERSION" ]; then
+	echo "Version number not found in install.rdf"
+	exit 1
+fi
+HASH=`git -C "$REPO_DIR" rev-parse --short HEAD`
+
+# Export a clean copy of the tree
+rsync -a --exclude=".git*" "$REPO_DIR/" "$TEMPDIR/zotero/"
+
+cd $TEMPDIR/zotero/chrome
+# Checkout failed -- bail
+if [ $? -eq 1 ]; then
+	exit;
+fi
+
+echo "Deleting CSL locale support files"
+pushd "$TEMPDIR/zotero" > /dev/null
+find chrome/content/zotero/locale/csl -mindepth 1 ! -name '*.xml' ! -name locales.json -print -delete
+popd > /dev/null
+
+# Generate revision number for version
+if [[ "$CHANNEL" != "release" ]] && [[ "$CHANNEL" != "source" ]]; then
+	if [ ! -f "$BUILDDIR/lastrev-$VERSION" ]; then
+		echo "0" > "$BUILDDIR/lastrev-$VERSION"
+	fi
+	let REV=`cat $BUILDDIR/lastrev-$VERSION`+1
+fi
+
+# Substitute in the current revision
+if [ "$CHANNEL" = "release" ]; then
+	perl -pi -e "s/\.SOURCE//g" $TEMPDIR/zotero/resource/config.js
+elif [ "$CHANNEL" = "release" ]; then
+	perl -pi -e "s/\.SOURCE/-$CHANNEL.$HASH/g" $TEMPDIR/zotero/resource/config.js
+else
+	perl -pi -e "s/\.SOURCE/-$CHANNEL.$REV+$HASH/g" $TEMPDIR/zotero/resource/config.js
+fi
+
+cd ..
+
+# Delete test files
+rm .travis.yml
+rm -rf test
+
+# Add FW header and footer
+echo "/*********************** BEGIN FRAMEWORK ***********************/" > $BUILDDIR/fw.js
+cat $ROOTDIR/zotero-transfw/framework.js >> $BUILDDIR/fw.js
+echo "/*********************** END FRAMEWORK ***********************/" >> $BUILDDIR/fw.js
+
+# Build translators.zip
+if [ -d translators ]; then
+	cd translators
+	mv deleted.txt ..
+	mkdir output
+	counter=0;
+	for file in *.js; do
+		newfile=$counter.js;
+		id=`grep -m 1 '"translatorID"\s*:\s*"' "$file" | perl -ne 'print and last if s/.*"translatorID"\s*:\s*"(.*)".*/\1/'`
+		label=`grep -m 1 '"label"\s*:\s*"' "$file" | perl -ne 'print and last if s/.*"label"\s*:\s*"(.*)".*/\1/'`
+		mtime=`grep -m 1 '"lastUpdated"\s*:\s*"' "$file" | perl -ne 'print and last if s/.*"lastUpdated"\s*:\s*"(.*)".*/\1/'`
+		echo $newfile,$id,$label,$mtime >> ../translators.index		
+		cp "$file" output/$newfile;
+		counter=$(($counter+1))
+	done;
+	cd output
+	
+	# Substitute FW line with unminified source for AMO review
+	cp $BUILDDIR/fw.js .
+	perl -pe 's/.+FW LINE.+/`cat fw.js`/ge' -i *.js
+	rm fw.js
+	rm $BUILDDIR/fw.js
+	
+	zip ../../translators.zip *
+	cd ../..
+	rm -rf translators
+fi
+
+# Build styles.zip with default styles
+if [ -d styles ]; then
+	cd styles
+	rm -f update
+	#for i in `ls *.csl`; do
+	#	rm -f "$i"
+	#	curl -sO "https://raw.github.com/citation-style-language/styles/master/$i"
+	#done
+	zip ../styles.zip *
+	cd ..
+	rm -rf styles
+fi
+
+echo
+echo ======================================================
+echo
+echo Original install.rdf:
+echo
+cat install.rdf
+echo
+echo
+echo Original update.rdf:
+echo
+cat update.rdf
+echo
+echo ======================================================
+echo
+
+# If a source build, substitute in the current revision
+if [ "$CHANNEL" = "release" ]; then
+	perl -pi -e "s/\.SOURCE//g" install.rdf
+	perl -pi -e "s/\.SOURCE//g" update.rdf
+elif [ "$CHANNEL" = "source" ]; then
+	perl -pi -e "s/\.SOURCE/.SOURCE.$HASH/g" install.rdf
+	perl -pi -e "s/\.SOURCE/.SOURCE.$HASH/g" update.rdf
+else
+	perl -pi -e "s/\.SOURCE/-$CHANNEL.$REV+$HASH/g" install.rdf
+	perl -pi -e "s/\.SOURCE/-$CHANNEL.$REV+$HASH/g" update.rdf
+fi
+
+if [ $XPIDIR ]; then
+	XPIDIR="$XPIDIR\/"
+fi
+perl -pi -e "s/update-source\.rdf/${XPIDIR}update$RDFSUFFIX.rdf/g" install.rdf
+perl -pi -e "s/zotero\.xpi/${XPIDIR}zotero$XPISUFFIX.xpi/g" update.rdf
+
+# Save with suffix extension to build dir
+mv update.rdf ../update$BUILDSUFFIX.rdf
+zip -r ../zotero$BUILDSUFFIX.xpi .
+
+echo
+echo ======================================================
+echo
+echo Modified install.rdf:
+echo
+cat install.rdf
+echo
+echo
+echo Modified config.js
+echo
+cat resource/config.js | grep VERSION:
+echo
+
+cd ..
+# Cygwin has sha1sum, macOS has shasum, Linux has both
+if [[ -n "`which sha1sum 2> /dev/null`" ]]; then
+		SHACMD="sha1sum"
+else
+		SHACMD="shasum"
+fi
+SHA1=`$SHACMD zotero$BUILDSUFFIX.xpi | cut -d' ' -f1`
+perl -pi -e "s/sha1:/sha1:$SHA1/g" update$BUILDSUFFIX.rdf
+
+echo
+echo Modified update.rdf:
+echo
+cat update$BUILDSUFFIX.rdf
+echo
+echo ======================================================
+echo
+
+mv zotero$BUILDSUFFIX.xpi $BUILDDIR
+mv update$BUILDSUFFIX.rdf $BUILDDIR
+cd $BUILDDIR
+rm -rf $TEMPDIR
+
+echo
+echo "zotero$BUILDSUFFIX.xpi and update$BUILDSUFFIX.rdf saved to $BUILDDIR"
+echo
+
+cd ..
+if [ "$CHANNEL" != "release" ]; then
+	echo -n $REV > $BUILDDIR/lastrev-$VERSION
+fi

@@ -1,0 +1,112 @@
+#!/bin/bash
+set -euo pipefail
+
+DIR="${1:-}/resource/tinymce"
+URL="${2:-}"
+
+if [[ -z "$DIR" ]] || [[ -z "$URL" ]]; then
+	echo "Usage: $0 /path/to/client zip-url" >&2
+	exit 1
+fi
+
+if [ ! -d "$DIR" ]; then
+	echo "$DIR is not a directory" >&2
+	exit 1
+fi
+
+rm -rf "$DIR/tmp"
+mkdir "$DIR/tmp"
+cd "$DIR/tmp"
+wget -O tinymce.zip $URL
+unzip -q tinymce.zip
+rm tinymce.zip
+cd tinymce/js/tinymce
+
+# Main file
+mv tinymce.min.js "$DIR/tinymce.min.js"
+
+# Plugins
+rm -rf "$DIR/plugins"
+# TEMP: Paste plugin handled below
+for p in autolink code contextmenu directionality link lists nonbreaking searchreplace textcolor; do
+	mkdir -p "$DIR/plugins/$p/"
+	mv plugins/$p/plugin.min.js "$DIR/plugins/$p/"
+done
+
+# Patch link plugin
+if ! grep --quiet 'o=t.\$' "$DIR/plugins/link/plugin.min.js"; then
+	echo "Couldn't find 't' for editor in link plugin" >&2
+	exit 1
+fi
+if ! grep --quiet 's(e.href)' "$DIR/plugins/link/plugin.min.js"; then
+	echo "Couldn't find 's(e.href)' in link plugin" >&2
+	exit 1
+fi
+if ! grep --quiet '/^\\w+:/' "$DIR/plugins/link/plugin.min.js"; then
+	echo "Couldn't find '/^\w+:/' in link plugin" >&2
+	exit 1
+fi
+perl -pi -e 's/s\(e\.href\)/t.execCommand("ZoteroLinkClick", false, e.href)/' "$DIR/plugins/link/plugin.min.js"
+perl -pi -e 's{\^\\w\+:}{^\\w+:|^#}' "$DIR/plugins/link/plugin.min.js"
+
+# Skin
+rm -rf "$DIR/skins"
+mkdir -p "$DIR/skins/lightgray/fonts" "$DIR/skins/lightgray/img"
+for i in content.min.css skin.min.css; do
+	mv skins/lightgray/$i "$DIR/skins/lightgray/"
+	
+	file="$DIR/skins/lightgray/$i"
+	
+	# Remove unsupported CSS
+	perl -pi -e 's/-moz-box-shadow:[^;}]+;?//g' $file
+	perl -pi -e 's/filter:(alpha|progid)[^;}]+;?//g' $file
+	perl -pi -e 's/scrollbar-[a-z0-9]+-color:[^;}]+;?//g;' $file
+	perl -pi -e 's/speak:[^;}]+;?//g' $file
+	perl -pi -e 's/text-shadow:\dpx \dpx none;?//g' $file
+	perl -pi -e 's/(?<!-)user-modify:[^;}]+;?//g' $file
+	perl -pi -e 's/(?<!-)user-select:[^;}]+;?//g' $file
+	perl -pi -e 's/(?<!-)word-break:break-word;?//g' $file
+	perl -pi -e 's/zoom:[^;}]+;?//g' $file
+	# Strip CSS comments
+	perl -pi -e 's/\/\*[^*]+\*\///g' $file
+	# Strip declarations beginning with *, which would be dropped anyway
+	perl -pi -e 's/\*[a-z\-][^;}]+;?//g' $file
+	# Strip stray asterisks
+	perl -pi -e 's/;\*}/;}/g' $file
+done
+for i in tinymce-small.woff tinymce.woff; do
+	mv skins/lightgray/fonts/$i "$DIR/skins/lightgray/fonts/"
+done
+for i in anchor.gif loader.gif object.gif trans.gif; do
+	mv skins/lightgray/img/$i "$DIR/skins/lightgray/img/"
+done
+
+# Theme
+rm -rf "$DIR/themes"
+mkdir -p "$DIR/themes/modern"
+for i in theme.min.js; do
+	cp themes/modern/$i "$DIR/themes/modern/"
+done
+
+cd "$DIR"
+
+# TEMP: Get 'paste' plugin from 4.6.7 to fix
+# https://forums.zotero.org/discussion/70720/after-copy-by-dragging-the-cursor-disappears
+cd tmp
+wget -O tinymce-paste.zip http://download.ephox.com/tinymce/community/tinymce_4.6.7.zip
+sha=`shasum -a 256 tinymce-paste.zip | cut -d' ' -f1`
+if [ $sha != 'aae9320ba1f8c03a332cd8649489c6a77aa737ae934d14b21b55365797c268a6' ]; then
+	echo "Hash doesn't match for tinymce_4.6.7.zip!" >&2
+	exit 1
+fi
+mkdir -p "$DIR/plugins/paste/"
+unzip -j tinymce-paste.zip tinymce/js/tinymce/plugins/paste/plugin.min.js -d "$DIR/plugins/paste/"
+rm tinymce-paste.zip
+
+rm -rf tmp
+
+git add $DIR
+git -C $DIR/../../ status
+git -C $DIR diff --cached
+
+echo Done

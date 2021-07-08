@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#
+# Get a signed build from AMO manually if 'jpm sign' times out
+#
+
+URL="$1"
+
+if [ -z "$URL" ]; then
+	echo "Usage: $0 xpi_url"
+	exit 1
+fi
+
+. config.sh
+
+ROOTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+JWT=`$ROOTDIR/jwt_get`
+RETVAL=$?
+if [ $RETVAL -ne 0 ]; then
+	echo $JWT
+	exit $RETVAL
+fi
+
+cd "$ROOTDIR/build"
+curl -L -O "$URL" -H "Authorization: JWT $JWT"

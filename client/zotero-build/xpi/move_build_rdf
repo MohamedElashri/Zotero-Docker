@@ -1,0 +1,45 @@
+#!/bin/bash -e
+
+#
+# Move update-build.rdf to download directory with given version number
+# and set up symlink to update.rdf
+#
+
+. config.sh
+
+if [ -z "$1" ]; then
+	echo "Usage: $0 version"
+	exit 1
+fi
+
+VERSION="$1"
+
+if ! grep --quiet "<version>$VERSION" "$BUILD_DIR/update-build.rdf" ; then
+	echo "$VERSION not found in update-build.rdf"
+	exit 1
+fi
+
+if [ -f "${RDF_DEPLOY_PATH}update-$VERSION.rdf" ]; then
+	echo "update-$VERSION.rdf already exists"
+	exit 1
+fi
+
+if [ -z "$DEPLOY_HOST" ]; then
+	mv "$BUILD_DIR/update-build.rdf" "$RDF_DEPLOY_PATH/update-$VERSION.rdf"
+	cd "$RDF_DEPLOY_PATH"
+	ln -f -s update-$VERSION.rdf update.rdf
+	
+	ls -laG update*rdf
+	echo
+	cat update.rdf
+else
+	scp "$BUILD_DIR/update-build.rdf" "$DEPLOY_HOST:${RDF_DEPLOY_PATH}update-$VERSION.rdf"
+	ssh $DEPLOY_HOST << EOF
+		cd "$RDF_DEPLOY_PATH"
+		ln -f -s update-$VERSION.rdf update.rdf
+		
+		ls -laG update*rdf
+		echo
+		cat update.rdf
+	EOF
+fi

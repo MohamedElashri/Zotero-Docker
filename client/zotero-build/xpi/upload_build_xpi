@@ -1,0 +1,33 @@
+#!/bin/bash -e
+
+#
+# Upload zotero-build.xpi to S3 'extension' directory with correct content type
+#
+
+. config.sh
+
+S3_PATH="$S3_BUCKET/extension/"
+
+if [ ! -d "$BUILD_DIR" ]; then
+	echo "$BUILD_DIR is not a directory"
+	exit 1
+fi
+
+XPI="$BUILD_DIR/$XPI_FILE"
+
+if [ ! -f "$XPI" ]; then
+	echo "$XPI not found"
+	exit 1
+fi
+
+if ! unzip -l "$XPI" | grep --quiet META-INF; then
+	echo "XPI is not signed"
+	exit 1
+fi
+
+aws s3 cp --content-type application/x-xpinstall "$XPI" s3://${S3_PATH}$XPI_FILE
+if [ $? != 0 ]; then
+	echo "Error running aws s3"
+	exit 1
+fi
+rm $XPI

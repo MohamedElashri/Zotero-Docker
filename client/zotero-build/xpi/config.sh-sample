@@ -1,0 +1,12 @@
+export ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export BUILD_DIR="$ROOT_DIR/build"
+
+export AMO_KEY=""
+export AMO_SECRET=""
+export XPI_FILE="foo-build.xpi"
+export RDF_FILE="update-build.rdf"
+export S3_BUCKET="foo-download"
+export DEPLOY_HOST="deploy.zotero"
+export RDF_DEPLOY_PATH="/path/to/dir"
+export DEPLOY_CMD="/path/to/script"
+export ADDON_ID="foo@example.com"

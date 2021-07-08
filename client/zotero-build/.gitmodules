@@ -1,0 +1,3 @@
+[submodule "xpi/zotero-transfw"]
+	path = xpi/zotero-transfw
+	url = https://github.com/egh/zotero-transfw.git

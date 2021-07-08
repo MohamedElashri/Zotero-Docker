@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+var jwt = require('jsonwebtoken');
+
+if (!process.env.AMO_KEY) {
+  console.log("AMO_KEY not set");
+  process.exit(1);
+}
+
+if (!process.env.AMO_SECRET) {
+  console.log("AMO_SECRET not set");
+  process.exit(1);
+}
+
+var issuedAt = Math.floor(Date.now() / 1000);
+var payload = {
+  iss: process.env.AMO_KEY,
+  jti: Math.random().toString(),
+  iat: issuedAt,
+  exp: issuedAt + 60,
+};
+
+var secret = process.env.AMO_SECRET;
+var token = jwt.sign(payload, secret, {
+  algorithm: 'HS256',  // HMAC-SHA256 signing algorithm
+});
+
+console.log(token);

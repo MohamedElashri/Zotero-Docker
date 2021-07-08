@@ -1,0 +1,70 @@
+#!/bin/bash -e
+
+. config.sh
+
+cd "$BUILD_DIR"
+
+if [ ! -f $XPI_FILE ]; then
+	echo "XPI not found"
+	exit 1
+fi
+
+if unzip -l zotero-build.xpi | grep --quiet META-INF; then
+	echo "XPI is already signed"
+	exit 1
+fi
+
+if [ -z "$1" ]; then
+	if ls *-fx.xpi 1> /dev/null 2>&1; then
+		echo "Signed XPI already downloaded -- pass file path to process"
+		exit 1
+	fi
+	
+	$ROOT_DIR/node_modules/.bin/jpm sign --api-key $AMO_KEY --api-secret $AMO_SECRET --xpi "$XPI_FILE"
+	
+	XPI_FILE_SIGNED="`ls *-fx.xpi`"
+else
+	XPI_FILE_SIGNED="`basename $(echo -n $1)`"
+
+	if [ ! -f "$XPI_FILE_SIGNED" ]; then
+		echo "$XPI_FILE_SIGNED not found"
+		exit 1
+	fi
+fi
+
+unzip -t "$XPI_FILE_SIGNED" > /dev/null
+if [ $? -gt 0 ]; then
+	echo "Downloaded XPI was not a ZIP file!"
+	exit 1
+fi
+
+if ! unzip -l "$XPI_FILE_SIGNED" | grep --quiet META-INF; then
+	echo "Downloaded XPI was not signed!"
+	exit 1
+fi
+
+# Verify XPI contents
+rm -rf a b
+mkdir a b
+cp $XPI_FILE a
+cp $XPI_FILE_SIGNED b
+cd a
+unzip $XPI_FILE > /dev/null
+rm $XPI_FILE
+cd ../b
+unzip $XPI_FILE_SIGNED > /dev/null
+rm $XPI_FILE_SIGNED
+cd ..
+if [ "`diff -r a b | grep -v META-INF`" != "" ]; then
+	echo "Contents of the signed XPI differ!"
+	echo
+	diff -r a b
+	exit 1
+fi
+rm -rf a b
+
+# Generate SHA-1 hash and sub into update manifest
+HASH=(`shasum "$XPI_FILE_SIGNED"`)
+perl -pi -e "s/sha1:[^<]+/sha1:${HASH[0]}/g" "$RDF_FILE"
+
+mv "$XPI_FILE_SIGNED" "$XPI_FILE"

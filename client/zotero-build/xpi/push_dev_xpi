@@ -1,0 +1,79 @@
+#!/bin/bash -e
+
+#
+# Deploy zotero-build.xpi as a dev build with a given suffix using
+# update-build.rdf as the update manifest with a given suffix
+#
+
+if [[ -z "$1" || -z "$2" ]]; then
+	echo "Usage: $0 xpi-suffix rdf-suffix"
+	exit 1
+fi
+XPI_SUFFIX="$1"
+RDF_SUFFIX="$2"
+
+. config.sh
+
+S3_PATH="$S3_BUCKET/dev/"
+RDF_DEV_DEPLOY_PATH="${RDF_DEPLOY_PATH}dev/"
+
+if [ ! -d "$BUILD_DIR" ]; then
+	echo "$BUILD_DIR is not a directory"
+	exit 1
+fi
+
+XPI="$BUILD_DIR/$XPI_FILE"
+RDF="$BUILD_DIR/$RDF_FILE"
+
+if [ ! -f "$XPI" ]; then
+	echo "$XPI not found"
+	exit 1
+fi
+
+if [ ! -f "$RDF" ]; then
+	echo "$RDF not found"
+	exit 1
+fi
+
+if [ -z "$DEPLOY_HOST" ]; then
+	if [ ! -d "$RDF_DEV_DEPLOY_PATH" ]; then
+		echo "$RDF_DEV_DEPLOY_PATH is not a directory"
+		exit 1
+	fi
+else
+	set +e
+	ssh $DEPLOY_HOST "test -e $RDF_DEV_DEPLOY_PATH"
+	retval=$?
+	set -e
+	if [ $retval -eq 1 ]; then
+		echo "$RDF_DEV_DEPLOY_PATH is not a directory"
+		exit 1
+	fi
+fi
+
+aws s3 cp --content-type application/x-xpinstall "$XPI" s3://${S3_PATH}$XPI_FILE
+aws s3 mv s3://${S3_PATH}$XPI_FILE s3://${S3_PATH}zotero-$XPI_SUFFIX.xpi
+rm $XPI
+
+echo
+
+# Replace download URL. Since dev XPIs change without changing filenames,
+# they can't be served from CloudFront. Instead, install.rdf points to
+# zotero.org, which redirects to a direct S3 URL.
+echo "Updating download URL"
+echo
+perl -pi -e "s/http:\/\/download.zotero.org\/extension/https:\/\/www.zotero.org\/download/g" $RDF
+grep -C 2 'www.zotero.org/download' $RDF
+
+echo
+
+if [ -z "$DEPLOY_HOST" ]; then
+	echo "Moving "$RDF" to ${RDF_DEV_DEPLOY_PATH}update-$RDF_SUFFIX.rdf"
+	mv "$RDF" "${RDF_DEV_DEPLOY_PATH}update-$RDF_SUFFIX.rdf"
+	$DEPLOY_CMD
+else
+	echo "Uploading "$RDF" to $DEPLOY_HOST:${RDF_DEV_DEPLOY_PATH}update-$RDF_SUFFIX.rdf"
+	scp "$RDF" "$DEPLOY_HOST:${RDF_DEV_DEPLOY_PATH}update-$RDF_SUFFIX.rdf"
+	ssh $DEPLOY_HOST $DEPLOY_CMD
+fi
+echo
