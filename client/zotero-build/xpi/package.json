@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "jpm": "~1.2.2",
+    "jpm": "~1.3.0",
     "jsonwebtoken": "~7.2.1"
   },
   "devDependencies": {}
