@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "jpm": "~1.2.2",
-    "jsonwebtoken": "~7.2.1"
+    "jsonwebtoken": "~8.5.0"
   },
   "devDependencies": {}
 }
