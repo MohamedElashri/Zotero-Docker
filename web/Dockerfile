@@ -1,4 +1,4 @@
-FROM alpine:3
+FROM alpine:20210212
 ARG TAG=master
 
 RUN apk add --no-cache npm git rsync perl
