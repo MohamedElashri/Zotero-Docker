@@ -20,7 +20,7 @@
     "classnames": "^2.2.6",
     "prop-types": "^15.7.2",
     "react": "^16.11.0",
-    "react-autosuggest": "^9.4.3",
+    "react-autosuggest": "^10.0.0",
     "react-dom": "^16.11.0",
     "react-intl": "^3.4.0",
     "react-select": "^3.0.8",
