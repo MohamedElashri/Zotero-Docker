@@ -50,7 +50,7 @@
     "multimatch": "^2.1.0",
     "react-virtualized": "9.22.3",
     "sass": "^1.28.0",
-    "sinon": "^7.3.2",
+    "sinon": "11.1.2",
     "universalify": "^0.1.1"
   }
 }
