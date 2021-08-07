@@ -1,3 +1,4 @@
+[![Docker Image CI](https://github.com/MohamedElashri/Zotero-Docker/actions/workflows/docker-image.yml/badge.svg)](https://github.com/MohamedElashri/Zotero-Docker/actions/workflows/docker-image.yml)
 # Zotero-Docker
  Docker version of Zotero dataserver and web library combined. This work is based on the original work of [zotero prime](https://github.com/SamuelHassine/zotero-prime)
 
