@@ -45,7 +45,7 @@ RUN ln -s /etc/php/7.2/mods-available/memcached.ini /etc/php/7.2/apache2/conf.d/
 RUN DEBIAN_FRONTEND=noninteractive pear install HTTP_Request2
 
 # Setup awscli
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install python python3-pip rsync git wget rinetd
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install python3 python3-pip rsync git wget rinetd
 RUN DEBIAN_FRONTEND=noninteractive pip install awscli
 
 # Install NodeJS, Zotero web-library requires: node: ^8.16.0 (https://gist.github.com/remarkablemark/aacf14c29b3f01d6900d13137b21db3a#file-dockerfile-L5)
