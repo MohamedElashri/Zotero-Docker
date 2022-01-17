@@ -44,7 +44,7 @@
     "eslint": "8.0.0",
     "eslint-plugin-react": "^7.12.4",
     "fs-extra": "10.0.0",
-    "globby": "^6.1.0",
+    "globby": "12.2.0",
     "jspath": "^0.4.0",
     "mocha": "9.0.3",
     "multimatch": "^2.1.0",
