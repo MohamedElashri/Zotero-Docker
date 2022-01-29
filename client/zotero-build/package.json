@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/zotero/zotero-build#readme",
   "dependencies": {
-    "sqlite": "^3.0.3"
+    "sqlite": "^4.0.0"
   }
 }
