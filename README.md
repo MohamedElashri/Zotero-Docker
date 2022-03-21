@@ -1,4 +1,8 @@
 [![Docker Image CI](https://github.com/MohamedElashri/Zotero-Docker/actions/workflows/docker-image.yml/badge.svg)](https://github.com/MohamedElashri/Zotero-Docker/actions/workflows/docker-image.yml)
+
+# Project discontinued
+The project needs a lot of work because there are many things missing and zotero team is not interested in making things easier for having a selfhosted version. It still the best research manager and only viable open source option. With the release of Zotero 6 and their great additions this project becomes irrelvant and can't cope up. Also I don't have time to invest so This would be archived. 
+
 # Zotero-Docker
  Docker version of Zotero dataserver and web library combined. This work is based on the original work of [zotero prime](https://github.com/SamuelHassine/zotero-prime)
 
