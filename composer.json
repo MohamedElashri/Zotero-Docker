@@ -4,7 +4,7 @@
 	"license": "AGPL-3.0",
 	"require": {
 		"aws/aws-sdk-php": "^3.2",
-		"doctrine/cache": "1.*",
+		"doctrine/cache": "2.*",
 		"elasticsearch/elasticsearch": "~7.0",
 		"php-ds/php-ds": "^1.2"
 	},
